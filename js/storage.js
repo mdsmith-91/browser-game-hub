@@ -94,3 +94,14 @@ const Storage = {
     }
   }
 };
+
+if (window.location.pathname.startsWith('/games/')) {
+  if (!document.title.includes('Alt Tab Tavern')) {
+    document.title = `${document.title} | Alt Tab Tavern`;
+  }
+
+  const backToHub = document.getElementById('backToHub');
+  if (backToHub) {
+    backToHub.textContent = '← Back to Alt Tab Tavern';
+  }
+}

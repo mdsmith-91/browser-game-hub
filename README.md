@@ -1,6 +1,6 @@
-# Browser Game Hub
+# Alt Tab Tavern
 
-A dependency-free static game hub with local play only: no accounts, servers, or networking.
+Alt Tab Tavern is a dependency-free static browser game hub containing eight playable games with local multiplayer support. It has no accounts, servers, or networking.
 
 ## Run locally
 
@@ -26,6 +26,6 @@ Battleship hot-seat play has two private setup turns. After every setup and comb
 
 ## Architecture and checks
 
-The hub is rendered from `js/game-registry.js`; the registry declares each game's supported modes. Shared score and aggregate statistics use `bgh_` LocalStorage keys through `js/storage.js`. Each game remains self-contained under `games/<id>/`.
+The hub is rendered from `js/game-registry.js`; the registry declares each game's supported modes. Shared score and aggregate statistics use established `bgh_` LocalStorage keys through `js/storage.js`. Each game remains self-contained under `games/<id>/`. The repository directory may remain `browser-game-hub`; the public site name is Alt Tab Tavern.
 
 Manual checks remain the project standard: launch all eight cards, switch every mode, verify restart/back navigation, test keyboard/touch behavior where available, and confirm saved scores after reload.

@@ -4,6 +4,10 @@ function renderHub() {
   const gamesContainer = document.querySelector('.game-grid');
   if (!gamesContainer) return;
 
+  document.querySelectorAll('[data-game-count]').forEach(element => {
+    element.textContent = GameRegistry.length;
+  });
+
   gamesContainer.innerHTML = '';
   GameRegistry.forEach(game => {
     const card = document.createElement('article');
@@ -14,7 +18,7 @@ function renderHub() {
       <div class="card-content">
         <h3>${game.title}</h3>
         <p>${game.description}</p>
-        <p class="mode-summary">${game.gameModes.join(' · ')}</p>
+        <p class="mode-summary">${game.playerCount} player${game.playerCount === '1' ? '' : 's'} &middot; Local multiplayer${game.aiOpponent ? ' &middot; AI opponent' : ''}</p>
       </div>
       <div class="card-meta">
         <span class="high-score">${game.highScoreLabel || 'High Score'}: ${highScore ?? '—'}</span>

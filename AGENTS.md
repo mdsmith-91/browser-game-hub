@@ -2,8 +2,8 @@
 
 ## Project Structure & Module Organization
 
-This is a dependency-free browser game hub. The root `index.html` loads the
-shared application shell. Shared code is in `js/`: `app.js` manages hub and
+This is a dependency-free browser game hub published as **Alt Tab Tavern**. The root `index.html` loads the
+shared application shell. Public-facing copy, metadata, and navigation use Alt Tab Tavern; internal repository and LocalStorage identifiers remain unchanged. Shared code is in `js/`: `app.js` manages hub and
 game navigation, `game-registry.js` lists games, and `storage.js` handles local
 high scores. Shared styles live in `css/`.
 
