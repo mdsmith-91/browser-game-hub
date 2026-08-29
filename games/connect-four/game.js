@@ -5,9 +5,9 @@ const ConnectFour = (() => {
   let currentPlayer;
   let gameActive;
   let selectedCol = 0;
-  let scores = { red: 0, yellow: 0, draws: 0 };
 
   function initialise() {
+    GameUI.clearGameOver();
     board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
     currentPlayer = 'red';
     gameActive = true;
@@ -54,6 +54,7 @@ const ConnectFour = (() => {
       const cell = document.createElement('button');
       const occupied = board[row][col];
       cell.type = 'button';
+      cell.tabIndex = row === 0 ? 0 : -1;
       cell.className = `cell${occupied ? '' : ' empty'}${winning?.some(item => item.row === row && item.col === col) ? ' winning-pieces' : ''}`;
       cell.setAttribute('aria-label', `Drop a piece in column ${col + 1}`);
       cell.addEventListener('click', () => playColumn(col));
@@ -75,21 +76,20 @@ const ConnectFour = (() => {
 
   function finish(draw) {
     gameActive = false;
-    if (draw) scores.draws++;
-    else scores[currentPlayer]++;
     Storage.updateMultiplayerStats('connect-four', draw ? 'draw' : currentPlayer === 'red' ? 'player1' : 'player2');
     updateUI();
-    const modal = document.createElement('div');
-    modal.className = 'game-over-modal';
-    modal.innerHTML = `<div class="modal-content"><h2>${draw ? 'Draw!' : `${currentPlayer === 'red' ? 'Red' : 'Yellow'} wins!`}</h2><p>${draw ? 'The board is full.' : 'Four in a row!'}</p><button class="game-btn btn-primary">Play Again</button></div>`;
-    modal.querySelector('button').addEventListener('click', () => { modal.remove(); initialise(); });
-    document.body.appendChild(modal);
+    GameUI.showGameOver({
+      title: draw ? 'Draw!' : `${currentPlayer === 'red' ? 'Red' : 'Yellow'} wins!`,
+      message: draw ? 'The board is full.' : 'Four in a row!',
+      onRestart: initialise
+    });
   }
 
   function updateUI() {
     const stats = Storage.getStats('connect-four');
     document.getElementById('turn-indicator').textContent = currentPlayer === 'red' ? 'Red' : 'Yellow';
     document.getElementById('red-wins').textContent = stats.player1Wins;
+    document.getElementById('yellow-wins').textContent = stats.player2Wins;
     document.getElementById('draws').textContent = stats.draws;
   }
 
@@ -107,8 +107,19 @@ const ConnectFour = (() => {
     initialise();
   }
 
+  function cleanup() {
+    document.removeEventListener('keydown', keydown);
+  }
+
+  window.addEventListener('pagehide', cleanup);
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) {
+      document.addEventListener('keydown', keydown);
+      initialise();
+    }
+  });
   window.initGame = initialise;
   window.restartGame = initialise;
-  window.cleanupGame = () => document.removeEventListener('keydown', keydown);
+  window.cleanupGame = cleanup;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup, { once: true }); else setup();
 })();

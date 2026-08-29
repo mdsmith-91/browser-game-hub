@@ -1,1 +1,44 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Memory Match</title><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="/css/games.css" /><link rel="stylesheet" href="./style.css" /></head><body><main class="game-container"><a href="/" id="backToHub" class="back-btn">Back to Game Hub</a><h1 class="game-title">Memory Match</h1><div class="game-header"><div class="game-controls"><button class="btn-secondary game-btn restart-btn">New Game</button><label class="control-group">Mode <select id="mode-select" class="mode-select"><option value="single">Single Player</option><option value="two">Two Players</option></select></label><span class="stat-box"><span class="label">Time</span><span class="value" id="timer">0:00</span></span><span class="stat-box"><span class="label">Moves</span><span class="value" id="moves">0</span></span></div><div class="game-info-bar"><div class="stat-box"><div class="label">Player 1 pairs</div><div class="value" id="player-one-score">-</div></div><div class="stat-box"><div class="label">Player 2 pairs</div><div class="value" id="player-two-score">-</div></div><div class="stat-box"><div class="label">Remaining pairs</div><div class="value"><span id="pairs-found">0</span>/8</div></div><div class="stat-box"><div class="label">Best Time</div><div class="value" id="best-time">--:--</div></div></div></div><div id="game-board"></div><p id="memory-status" class="board-labels" aria-live="polite"></p></main><script src="/js/storage.js"></script><script src="/games/memory/game.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Match every pair solo or take turns with a friend in Memory Match." />
+  <link rel="canonical" href="https://alttabtavern.com/games/memory/" />
+  <meta property="og:title" content="Memory Match | Alt Tab Tavern" />
+  <meta property="og:description" content="Match every pair solo or take turns with a friend in Memory Match." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/memory/" />
+  <meta name="theme-color" content="#171512" />
+  <title>Memory Match | Alt Tab Tavern</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/games.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="game-container">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
+    <h1 class="game-title">Memory Match</h1>
+    <div class="game-header">
+      <div class="game-controls">
+        <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
+        <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="single">Single Player</option><option value="two">Two Players</option></select></label>
+        <div class="stat-box"><span class="label">Time</span><span class="value" id="timer">0:00</span></div>
+        <div class="stat-box"><span class="label">Moves</span><span class="value" id="moves">0</span></div>
+      </div>
+      <div class="game-info-bar">
+        <div class="stat-box"><span class="label">Player 1 pairs</span><span class="value" id="player-one-score">-</span></div>
+        <div class="stat-box"><span class="label">Player 2 pairs</span><span class="value" id="player-two-score">-</span></div>
+        <div class="stat-box"><span class="label">Pairs found</span><span class="value"><span id="pairs-found">0</span>/8</span></div>
+        <div class="stat-box"><span class="label">Best time</span><span class="value" id="best-time">--:--</span></div>
+      </div>
+    </div>
+    <div id="game-board" aria-label="Memory card grid"></div>
+    <p id="memory-status" class="board-labels" aria-live="polite"></p>
+  </main>
+  <script src="/js/storage.js"></script>
+  <script src="/js/game-ui.js"></script>
+  <script src="/games/memory/game.js"></script>
+</body>
+</html>

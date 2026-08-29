@@ -1,2 +1,50 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Snake</title><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="/css/games.css" /><link rel="stylesheet" href="./style.css" /></head>
-<body><main class="game-container"><a href="/" id="backToHub" class="back-btn">Back to Game Hub</a><h1 class="game-title">Snake</h1><div class="game-header"><div class="game-controls"><button class="btn-secondary game-btn restart-btn">New Game</button><label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="single">Single Player</option><option value="two">Two Players</option></select></label><span class="stat-box"><span class="label">Player 1 Score</span><span class="value" id="score">0</span></span><span class="stat-box"><span class="label">Player 2 Score</span><span class="value" id="player-two-score">-</span></span></div><div class="game-info-bar"><div class="stat-box"><div class="label">High Score</div><div class="value" id="high-score-display">0</div></div><div class="stat-box"><div class="label">Level</div><div class="value" id="level">1</div></div><div class="stat-box"><div class="label">Speed</div><div class="value" id="speed-display">Normal</div></div></div></div><canvas id="game-board" aria-label="Snake game board"></canvas><p id="snake-status" class="board-labels" aria-live="polite"></p><p class="board-labels">Two Players: Player 1 uses WASD; Player 2 uses arrow keys. Both move at once; a shared crash is a draw.</p><div class="touch-controls"><button class="touch-control-btn" data-dir="up">Up</button><button class="touch-control-btn" data-dir="left">Left</button><button class="touch-control-btn" data-dir="down">Down</button><button class="touch-control-btn" data-dir="right">Right</button></div></main><script src="/js/storage.js"></script><script src="/games/snake/game.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play Snake solo or in a simultaneous local two-player match at Alt Tab Tavern." />
+  <link rel="canonical" href="https://alttabtavern.com/games/snake/" />
+  <meta property="og:title" content="Snake | Alt Tab Tavern" />
+  <meta property="og:description" content="Play Snake solo or in a simultaneous local two-player match at Alt Tab Tavern." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/snake/" />
+  <meta name="theme-color" content="#171512" />
+  <title>Snake | Alt Tab Tavern</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/games.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="game-container">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
+    <h1 class="game-title">Snake</h1>
+    <div class="game-header">
+      <div class="game-controls">
+        <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
+        <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="single">Single Player</option><option value="two">Two Players</option></select></label>
+        <div class="stat-box"><span class="label">Player 1 score</span><span class="value" id="score">0</span></div>
+        <div class="stat-box"><span class="label">Player 2 score</span><span class="value" id="player-two-score">-</span></div>
+      </div>
+      <div class="game-info-bar">
+        <div class="stat-box"><span class="label">High score</span><span class="value" id="high-score-display">0</span></div>
+        <div class="stat-box"><span class="label">Level</span><span class="value" id="level">1</span></div>
+        <div class="stat-box"><span class="label">Speed</span><span class="value" id="speed-display">Normal</span></div>
+      </div>
+    </div>
+    <canvas id="game-board" role="img" aria-label="Snake game board"></canvas>
+    <p id="snake-status" class="board-labels" aria-live="polite"></p>
+    <p class="board-labels">Two Players is keyboard-first: Player 1 uses W/A/S/D and Player 2 uses the arrow keys.</p>
+    <div class="touch-controls" aria-label="Snake direction controls">
+      <button type="button" class="touch-control-btn" data-dir="up">Up</button>
+      <button type="button" class="touch-control-btn" data-dir="left">Left</button>
+      <button type="button" class="touch-control-btn" data-dir="down">Down</button>
+      <button type="button" class="touch-control-btn" data-dir="right">Right</button>
+    </div>
+  </main>
+  <script src="/js/storage.js"></script>
+  <script src="/js/game-ui.js"></script>
+  <script src="/games/snake/game.js"></script>
+</body>
+</html>

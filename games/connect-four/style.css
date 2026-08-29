@@ -2,19 +2,21 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.3rem;
-  max-width: 600px;
+  width: min(100%, 600px);
   margin: 0 auto;
   touch-action: manipulation;
   user-select: none;
 }
 
 .cell {
-  width: clamp(40px, 11vw, 80px);
-  height: clamp(40px, 11vw, 80px);
+  aspect-ratio: 1;
+  min-width: 0;
   background-color: #3182ce;
   border-radius: 50%;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+  padding: 0;
   transition: transform 0.1s ease;
   touch-action: manipulation;
 }
@@ -26,8 +28,7 @@
 .cell.empty::before {
   content: '';
   position: absolute;
-  width: 80%;
-  height: 80%;
+  inset: 10%;
   border-radius: 50%;
   background-color: #2b6cb0;
 }
@@ -68,5 +69,3 @@
   from { box-shadow: inset -4px -4px 8px rgba(0,0,0,0.3); }
   to { box-shadow: inset -6px -6px 12px var(--accent), 0 0 15px var(--accent); }
 }
-
-.connect4-board, .connect4-board .cell { touch-action: manipulation; user-select: none; }

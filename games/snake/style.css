@@ -11,25 +11,3 @@
 
 .touch-controls { max-width: 240px; margin-inline: auto; }
 .touch-control-btn { flex: 1 1 44%; min-height: 52px; }
-
-.snake-head {
-  background-color: #48bb78 !important;
-  z-index: 10;
-}
-
-.snake-body {
-  background-color: #38a169 !important;
-}
-
-.food {
-  background-color: #f56565 !important;
-  border-radius: 50%;
-}
-
-.game-over-screen {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 100;
-}

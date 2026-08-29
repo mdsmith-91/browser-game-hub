@@ -12,11 +12,10 @@ function renderHub() {
   GameRegistry.forEach(game => {
     const card = document.createElement('article');
     const highScore = getRecord(game).value;
-    const modeBadges = [
-      game.singlePlayer ? '<span class="mode-badge">Solo</span>' : '',
-      game.localMultiplayer ? '<span class="mode-badge">2 Players</span>' : '',
-      game.aiOpponent ? '<span class="mode-badge ai">Versus AI</span>' : ''
-    ].join('');
+    const modeBadges = game.gameModes.map(mode => {
+      const label = mode === 'Single Player' ? 'Solo' : mode === 'Two Players' ? '2 Players' : 'Versus AI';
+      return `<span class="mode-badge${mode === 'Versus Computer' ? ' ai' : ''}">${label}</span>`;
+    }).join('');
     card.className = `game-card game-${game.id}`;
     card.innerHTML = `
       <div class="card-icon" aria-hidden="true"><span class="card-art"></span></div>
@@ -26,7 +25,7 @@ function renderHub() {
         <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
       </div>
       <div class="card-meta">
-        <span class="high-score">${game.record?.label || 'High score'}: ${highScore ?? '—'}</span>
+        <span class="high-score"><span>${game.record?.label || 'High score'}</span><strong>${highScore ?? '—'}</strong></span>
         <a class="play-btn" href="${game.url}" aria-label="Play ${game.title}">Play Now</a>
       </div>
     `;
@@ -44,5 +43,6 @@ function getRecord(game) {
 }
 
 function formatTime(seconds) {
-  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  const wholeSeconds = Math.max(0, Math.floor(seconds));
+  return `${Math.floor(wholeSeconds / 60)}:${String(wholeSeconds % 60).padStart(2, '0')}`;
 }

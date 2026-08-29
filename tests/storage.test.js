@@ -14,4 +14,19 @@ Storage.updateStats('test', true);
 assert.deepStrictEqual(JSON.parse(JSON.stringify(Storage.getStats('test'))), { gamesPlayed: 5, wins: 3, losses: 0, multiplayerMatches: 3, player1Wins: 2, player2Wins: 1, draws: 0 });
 values.set('bgh_corrupt_stats', '{not json');
 assert.deepStrictEqual(JSON.parse(JSON.stringify(Storage.getStats('corrupt'))), { gamesPlayed: 0, wins: 0, losses: 0, multiplayerMatches: 0, player1Wins: 0, player2Wins: 0, draws: 0 });
+values.set('bgh_score_highscore', '12points');
+assert.strictEqual(Storage.getHighScore('score'), null);
+assert.strictEqual(Storage.saveHighScore('score', -1), false);
+assert.strictEqual(Storage.saveHighScore('score', 42.9), true);
+assert.strictEqual(Storage.getHighScore('score'), 42);
+assert.strictEqual(Storage.saveHighScore('score', 40), false);
+
+const matchesBeforeInvalidResult = Storage.getStats('test').multiplayerMatches;
+Storage.updateMultiplayerStats('test', 'unknown');
+assert.strictEqual(Storage.getStats('test').multiplayerMatches, matchesBeforeInvalidResult);
+
+const originalSetItem = sandbox.localStorage.setItem;
+sandbox.localStorage.setItem = () => { throw new Error('storage unavailable'); };
+assert.doesNotThrow(() => Storage.saveStats('unavailable', { gamesPlayed: 1 }));
+sandbox.localStorage.setItem = originalSetItem;
 console.log('storage tests passed');

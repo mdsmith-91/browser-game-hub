@@ -3,57 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Drop disks and make four in a row in local two-player Connect Four." />
+  <link rel="canonical" href="https://alttabtavern.com/games/connect-four/" />
+  <meta property="og:title" content="Connect Four | Alt Tab Tavern" />
+  <meta property="og:description" content="Drop disks and make four in a row in local two-player Connect Four." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/connect-four/" />
+  <meta name="theme-color" content="#171512" />
   <title>Connect Four | Alt Tab Tavern</title>
-  <meta name="description" content="Drop disks and make four in a row in local two-player Connect Four." />
-  <link rel="canonical" href="https://alttabtavern.com/games/connect-four/" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <meta name="description" content="Drop disks and make four in a row in local two-player Connect Four." />
-  <link rel="canonical" href="https://alttabtavern.com/games/connect-four/" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/games.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="game-container">
-    <a href="#" id="backToHub" class="back-btn">← Back to Alt Tab Tavern</a>
-    <h2 class="game-title">Connect Four</h2>
-    
+  <main class="game-container">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
+    <h1 class="game-title">Connect Four</h1>
     <div class="game-header">
       <div class="game-controls">
-        <button class="btn-secondary game-btn restart-btn">🔄 New Game</button>
-        <div class="control-group">
-          <span class="stat-box">
-          <div class="label">Current Player (Player 1 Red / Player 2 Yellow)</div>
-            <div class="value" id="turn-indicator">Red</div>
-          </span>
-        </div>
+        <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
+        <div class="control-group"><span>Current player</span><strong class="turn-value" id="turn-indicator" aria-live="polite">Red</strong></div>
       </div>
-      
       <div class="game-info-bar">
-        <div class="stat-box">
-          <div class="label">Player 1 (Red) Wins</div>
-            <div class="value" id="red-wins">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="label">Draws</div>
-          <div class="value" id="draws">0</div>
-        </div>
+        <div class="stat-box"><span class="label">Player 1 (Red) wins</span><span class="value" id="red-wins">0</span></div>
+        <div class="stat-box"><span class="label">Player 2 (Yellow) wins</span><span class="value" id="yellow-wins">0</span></div>
+        <div class="stat-box"><span class="label">Draws</span><span class="value" id="draws">0</span></div>
       </div>
     </div>
-
-    <div id="game-board"></div>
-    
-    <p class="board-labels">Drop disks into columns. First to 4 in a row wins!</p>
-    <p class="board-labels" style="font-size: 0.85rem; margin-top: -0.5rem;">Click any column to drop a disk • Arrow keys select column • Enter/Space to drop</p>
-    
-    <!-- Touch controls -->
-    <div class="touch-controls">
-      <button class="touch-control-btn restart-btn" title="Restart Game">🔄</button>
-    </div>
-  </div>
-
+    <div id="game-board" aria-label="Connect Four board"></div>
+    <p class="board-labels">Select any cell in a column to drop a disk. The first player to make four in a row wins.</p>
+    <p class="board-labels board-help-copy">Keyboard: Left and Right choose a column; Enter or Space drops a disk.</p>
+  </main>
   <script src="/js/storage.js"></script>
+  <script src="/js/game-ui.js"></script>
   <script src="/games/connect-four/game.js"></script>
 </body>
 </html>

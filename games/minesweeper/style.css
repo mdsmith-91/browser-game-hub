@@ -48,20 +48,3 @@
 .cell.revealed-number-6 { color: #319795; }
 .cell.revealed-number-7 { color: #2d3748; }
 .cell.revealed-number-8 { color: #718096; }
-
-.game-over-screen {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 100;
-}
-
-#game-board.reveal-all .cell.mine::before { content: '💣'; }
-#game-board.reveal-all .cell.flagged.wrong-flag::after { content: '❌'; font-size: 1.2rem; }
-
-@media (max-width: 600px) {
-  .cell { width: 36px; height: 36px; }
-}
-
-.minesweeper-board { max-width: 100%; padding: 2px; touch-action: manipulation; }

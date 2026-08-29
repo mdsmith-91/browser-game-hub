@@ -16,6 +16,7 @@ const PongGame = (() => {
 
   function newMatch() {
     cancelAnimationFrame(animationId);
+    pressed.clear();
     scores = { left: 0, right: 0 };
     left = { y: (HEIGHT - paddle.height) / 2 };
     right = { y: (HEIGHT - paddle.height) / 2 };
@@ -36,6 +37,7 @@ const PongGame = (() => {
     lastFrame = now;
     update(elapsed);
     draw();
+    if (!active) return;
     animationId = requestAnimationFrame(loop);
   }
 
@@ -101,8 +103,6 @@ const PongGame = (() => {
   }
 
   function draw() {
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
     context.fillStyle = '#172033';
     context.fillRect(0, 0, WIDTH, HEIGHT);
     context.strokeStyle = 'rgba(226,232,240,.28)';
@@ -171,7 +171,10 @@ const PongGame = (() => {
       button.addEventListener('pointerdown', event => { event.preventDefault(); setTouch(button, true); });
       ['pointerup', 'pointercancel', 'pointerleave'].forEach(name => button.addEventListener(name, () => setTouch(button, false)));
     });
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
     window.addEventListener('pagehide', cleanup);
+    window.addEventListener('pageshow', event => { if (event.persisted) { document.addEventListener('keydown', keydown); document.addEventListener('keyup', keyup); newMatch(); } });
     newMatch();
   }
 

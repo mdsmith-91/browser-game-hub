@@ -1,1 +1,48 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Battleship</title><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="/css/games.css" /><link rel="stylesheet" href="./style.css" /></head><body><main class="game-container"><a href="/" id="backToHub" class="back-btn">Back to Game Hub</a><h1 class="game-title">Battleship</h1><div class="game-header"><div class="game-controls"><button class="btn-secondary game-btn" id="new-game">New Game</button><label class="control-group">Mode <select id="mode-select" class="mode-select"><option value="computer">Versus Computer</option><option value="two">Two Players</option></select></label><button class="btn-secondary game-btn setup-only" id="rotate">Rotate: Horizontal</button><button class="btn-secondary game-btn setup-only" id="randomize">Randomize Fleet</button><button class="btn-secondary game-btn setup-only" id="reset-placement">Reset Placement</button></div><div class="game-info-bar"><div class="stat-box"><div class="label">Victories</div><div class="value" id="victories">0</div></div><div class="stat-box"><div class="label">Enemy ships</div><div class="value" id="enemy-left">5</div></div></div></div><p id="battle-status" class="battle-status" aria-live="polite"></p><button id="continue" class="game-btn btn-primary" hidden>Continue</button><section id="fleet-picker" class="fleet-picker" aria-label="Fleet to place"></section><div class="battle-boards"><section><h2 id="own-heading">Your fleet</h2><p class="board-help">Your ships, hits, and misses.</p><div id="player-board" class="battle-board"></div></section><section><h2 id="target-heading">Enemy waters</h2><p class="board-help">Choose one unshot cell to fire.</p><div id="enemy-board" class="battle-board"></div></section></div><p class="board-labels">Two Players keeps fleets private: every setup and combat handoff requires the next player to continue.</p></main><script src="/js/storage.js"></script><script src="/games/battleship/game.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Place your fleet and play Battleship against the computer or in private local two-player mode." />
+  <link rel="canonical" href="https://alttabtavern.com/games/battleship/" />
+  <meta property="og:title" content="Battleship | Alt Tab Tavern" />
+  <meta property="og:description" content="Place your fleet and play Battleship against the computer or in private local two-player mode." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/battleship/" />
+  <meta name="theme-color" content="#171512" />
+  <title>Battleship | Alt Tab Tavern</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/games.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="game-container">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
+    <h1 class="game-title">Battleship</h1>
+    <div class="game-header">
+      <div class="game-controls">
+        <button type="button" class="btn-secondary game-btn" id="new-game">New Game</button>
+        <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="computer">Versus Computer</option><option value="two">Two Players</option></select></label>
+        <button type="button" class="btn-secondary game-btn setup-only" id="rotate">Rotate: Horizontal</button>
+        <button type="button" class="btn-secondary game-btn setup-only" id="randomize">Randomize &amp; Ready</button>
+        <button type="button" class="btn-secondary game-btn setup-only" id="reset-placement">Reset Placement</button>
+      </div>
+      <div class="game-info-bar">
+        <div class="stat-box"><span class="label">Victories</span><span class="value" id="victories">0</span></div>
+        <div class="stat-box"><span class="label">Enemy ships</span><span class="value" id="enemy-left">5</span></div>
+      </div>
+    </div>
+    <p id="battle-status" class="battle-status" aria-live="polite"></p>
+    <button type="button" id="continue" class="game-btn btn-primary" hidden>Continue</button>
+    <section id="fleet-picker" class="fleet-picker" aria-label="Fleet to place"></section>
+    <div class="battle-boards">
+      <section><h2 id="own-heading">Your fleet</h2><p class="board-help">Your ships, hits, and misses.</p><div id="player-board" class="battle-board" aria-label="Your fleet grid"></div></section>
+      <section><h2 id="target-heading">Enemy waters</h2><p class="board-help">Choose one unshot cell to fire.</p><div id="enemy-board" class="battle-board" aria-label="Target grid"></div></section>
+    </div>
+    <p class="board-labels">Two Players keeps fleets private: every setup and combat handoff requires the next player to continue.</p>
+  </main>
+  <script src="/js/storage.js"></script>
+  <script src="/games/battleship/game.js"></script>
+</body>
+</html>

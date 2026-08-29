@@ -9,6 +9,7 @@ const TicTacToe = (function() {
   ];
 
   function initGame() {
+    GameUI.clearGameOver();
     board = Array(9).fill(null);
     currentPlayer = 'X';
     gameActive = true;
@@ -91,31 +92,15 @@ const TicTacToe = (function() {
       
       showGameOver(
         `Player ${currentPlayer} Wins!`,
-        `Congratulations on the victory!`,
-        true
+        'Congratulations on the victory!'
       );
     }
     
     updateStatsUI();
   }
 
-  function showGameOver(title, message, isWin = false) {
-    const modal = document.createElement('div');
-    modal.className = 'game-over-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h2 style="color: ${isWin ? 'var(--accent)' : 'inherit'}">${title}</h2>
-        <p>${message}</p>
-        <button class="game-btn btn-primary restart-btn">Play Again</button>
-      </div>
-    `;
-    
-    modal.querySelector('.restart-btn').addEventListener('click', () => {
-      document.body.removeChild(modal);
-      initGame();
-    });
-    
-    document.body.appendChild(modal);
+  function showGameOver(title, message) {
+    GameUI.showGameOver({ title, message, onRestart: initGame });
   }
 
   function updateTurnIndicator() {
@@ -127,6 +112,7 @@ const TicTacToe = (function() {
   function updateStatsUI() {
     const stats = Storage.getStats('tic-tac-toe');
     document.getElementById('x-wins').textContent = stats.player1Wins;
+    document.getElementById('o-wins').textContent = stats.player2Wins;
     document.getElementById('draws').textContent = stats.draws;
   }
 

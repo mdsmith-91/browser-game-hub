@@ -6,6 +6,11 @@
   <title>Pong | Alt Tab Tavern</title>
   <meta name="description" content="Play fast Pong against the computer or a friend at Alt Tab Tavern." />
   <link rel="canonical" href="https://alttabtavern.com/games/pong/" />
+  <meta property="og:title" content="Pong | Alt Tab Tavern" />
+  <meta property="og:description" content="Play fast Pong against the computer or a friend at Alt Tab Tavern." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/pong/" />
+  <meta name="theme-color" content="#171512" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/games.css" />
@@ -13,7 +18,7 @@
 </head>
 <body>
   <main class="game-container">
-    <a href="#" id="backToHub" class="back-btn">← Back to Alt Tab Tavern</a>
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
     <h1 class="game-title">Pong</h1>
     <div class="game-header"><div class="game-controls">
       <button type="button" class="btn-secondary game-btn restart-btn">↻ New Match</button>
@@ -25,7 +30,7 @@
       <div class="stat-box"><div class="label">Best Difference</div><div class="value" id="best-difference">0</div></div>
     </div></div>
     <p id="pong-status" class="pong-status" aria-live="polite">First to 5 wins.</p>
-    <div class="pong-canvas-wrap"><canvas id="pong-board" aria-label="Pong playing field"></canvas></div>
+    <div class="pong-canvas-wrap"><canvas id="pong-board" role="img" aria-label="Pong playing field"></canvas></div>
     <p class="board-labels">Player 1: W / S · Player 2: ↑ / ↓ · First to 5 wins</p>
     <div class="pong-touch-controls" aria-label="Touch controls"><div><span>Player 1</span><button type="button" data-player="one" data-direction="up" aria-label="Move Player 1 up">↑</button><button type="button" data-player="one" data-direction="down" aria-label="Move Player 1 down">↓</button></div><div id="player-two-touch"><span>Player 2</span><button type="button" data-player="two" data-direction="up" aria-label="Move Player 2 up">↑</button><button type="button" data-player="two" data-direction="down" aria-label="Move Player 2 down">↓</button></div></div>
   </main>

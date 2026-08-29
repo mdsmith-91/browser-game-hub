@@ -4,12 +4,12 @@
 
 This is a dependency-free browser game hub published as **Alt Tab Tavern**. The root `index.html` loads the
 shared application shell. Public-facing copy, metadata, and navigation use Alt Tab Tavern; internal repository and LocalStorage identifiers remain unchanged. Shared code is in `js/`: `app.js` manages hub and
-game navigation, `game-registry.js` lists games, and `storage.js` handles local
-high scores. Shared styles live in `css/`.
+game navigation, `game-registry.js` lists games, `storage.js` handles local
+scores and statistics, and `game-ui.js` provides the shared game-over dialog. Shared styles live in `css/`.
 
 Each game is self-contained under `games/<game-id>/` with `index.html`,
 `style.css`, and `game.js`; current IDs include `snake`, `minesweeper`,
-`memory`, `connect-four`, `checkers`, and `tic-tac-toe`. Keep game-specific
+`memory`, `connect-four`, `checkers`, `tic-tac-toe`, `pong`, and `battleship`. Keep game-specific
 DOM, styling, and logic inside that directory.
 
 Game metadata in `js/game-registry.js` declares supported modes. Use the
@@ -20,7 +20,7 @@ updates, and keep private state hidden during hot-seat handoffs.
 
 ## Build, Test, and Development Commands
 
-There is no build system, package manager, or automated test suite. Serve the
+There is no build system or package manager. Dependency-free Node checks live in `tests/`. Serve the
 repository from its root so absolute paths such as `/js/app.js` resolve:
 
 ```powershell

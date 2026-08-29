@@ -12,6 +12,7 @@ const CheckersGame = (() => {
     : piece.color === 'red' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
 
   function initialise() {
+    GameUI.clearGameOver();
     board = Array.from({ length: 8 }, () => Array(8).fill(null));
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 8; col++) if ((row + col) % 2) board[row][col] = { color: 'white', king: false };
@@ -133,9 +134,10 @@ const CheckersGame = (() => {
       const target = legalMoves.find(move => move.row === row && move.col === col);
       cell.type = 'button';
       cell.className = `checkers-cell ${(row + col) % 2 ? 'dark' : 'light'}${target ? (target.capture ? ' highlight-capture' : ' valid-move') : ''}`;
-      cell.setAttribute('aria-label', `Row ${row + 1}, column ${col + 1}`);
-      cell.addEventListener('click', () => handleCell(row, col));
       const piece = board[row][col];
+      const state = piece ? `${piece.color}${piece.king ? ' king' : ''}` : target ? (target.capture ? 'capture destination' : 'valid move') : 'empty';
+      cell.setAttribute('aria-label', `Row ${row + 1}, column ${col + 1}, ${state}`);
+      cell.addEventListener('click', () => handleCell(row, col));
       if (piece) {
         const pieceEl = document.createElement('span');
         pieceEl.className = `piece ${piece.color}${piece.king ? ' king' : ''}${selectedPiece?.row === row && selectedPiece.col === col ? ' selected' : ''}`;
@@ -152,6 +154,9 @@ const CheckersGame = (() => {
     document.getElementById('white-captures').textContent = captures.white;
     document.getElementById('red-pieces').textContent = count('red');
     document.getElementById('white-pieces').textContent = count('white');
+    const stats = Storage.getStats('checkers');
+    document.getElementById('red-wins').textContent = stats.player1Wins;
+    document.getElementById('white-wins').textContent = stats.player2Wins;
   }
 
   function finish(winner) {
@@ -159,11 +164,11 @@ const CheckersGame = (() => {
     Storage.updateMultiplayerStats('checkers', winner === 'red' ? 'player1' : 'player2');
     render();
     updateUI();
-    const modal = document.createElement('div');
-    modal.className = 'game-over-modal';
-    modal.innerHTML = `<div class="modal-content"><h2>${winner === 'red' ? 'Red' : 'White'} wins!</h2><p>No legal moves remain for the opponent.</p><button class="game-btn btn-primary">Play Again</button></div>`;
-    modal.querySelector('button').addEventListener('click', () => { modal.remove(); initialise(); });
-    document.body.appendChild(modal);
+    GameUI.showGameOver({
+      title: `${winner === 'red' ? 'Red' : 'White'} wins!`,
+      message: 'No legal moves remain for the opponent.',
+      onRestart: initialise
+    });
   }
 
   function setup() {

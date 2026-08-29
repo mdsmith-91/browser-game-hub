@@ -3,56 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play accessible local two-player Tic-Tac-Toe at Alt Tab Tavern." />
+  <link rel="canonical" href="https://alttabtavern.com/games/tic-tac-toe/" />
+  <meta property="og:title" content="Tic-Tac-Toe | Alt Tab Tavern" />
+  <meta property="og:description" content="Play accessible local two-player Tic-Tac-Toe at Alt Tab Tavern." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/tic-tac-toe/" />
+  <meta name="theme-color" content="#171512" />
   <title>Tic-Tac-Toe | Alt Tab Tavern</title>
-  <meta name="description" content="Play accessible local two-player Tic-Tac-Toe at Alt Tab Tavern." />
-  <link rel="canonical" href="https://alttabtavern.com/games/tic-tac-toe/" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <meta name="description" content="Play accessible local two-player Tic-Tac-Toe at Alt Tab Tavern." />
-  <link rel="canonical" href="https://alttabtavern.com/games/tic-tac-toe/" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/games.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="game-container">
-    <a href="#" id="backToHub" class="back-btn">← Back to Alt Tab Tavern</a>
-    <h2 class="game-title">Tic-Tac-Toe</h2>
-    
+  <main class="game-container">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
+    <h1 class="game-title">Tic-Tac-Toe</h1>
     <div class="game-header">
       <div class="game-controls">
-        <button class="btn-secondary game-btn restart-btn">🔄 New Game</button>
-        <div class="control-group">
-          <span class="stat-box">
-          <div class="label">Current Player (X / O)</div>
-            <div class="value" id="turn-indicator">X</div>
-          </span>
-        </div>
+        <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
+        <div class="control-group"><span>Current player</span><strong class="turn-value" id="turn-indicator" aria-live="polite">X</strong></div>
       </div>
-      
       <div class="game-info-bar">
-        <div class="stat-box">
-          <div class="label">Player 1 Wins (X)</div>
-          <div class="value" id="x-wins">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="label">Draws</div>
-          <div class="value" id="draws">0</div>
-        </div>
+        <div class="stat-box"><span class="label">Player 1 (X) wins</span><span class="value" id="x-wins">0</span></div>
+        <div class="stat-box"><span class="label">Player 2 (O) wins</span><span class="value" id="o-wins">0</span></div>
+        <div class="stat-box"><span class="label">Draws</span><span class="value" id="draws">0</span></div>
       </div>
     </div>
-
-    <div id="game-board" class="board-3x3"></div>
-    
-    <p class="board-labels">Players take turns clicking cells. First to 3 in a row wins!</p>
-
-    <!-- Touch controls (hidden on desktop) -->
-    <div class="touch-controls">
-      <button class="touch-control-btn restart-btn" title="Restart Game">🔄</button>
-    </div>
-  </div>
-
+    <div id="game-board" class="board-3x3" aria-label="Tic-Tac-Toe board"></div>
+    <p class="board-labels">Players take turns selecting cells. The first player to make three in a row wins.</p>
+  </main>
   <script src="/js/storage.js"></script>
+  <script src="/js/game-ui.js"></script>
   <script src="/games/tic-tac-toe/game.js"></script>
 </body>
 </html>

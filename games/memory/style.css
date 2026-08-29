@@ -71,6 +71,3 @@
 @media (max-width: 600px) {
   .memory-board { gap: .45rem; }
 }
-
-.memory-board { max-width: min(600px, 100%); }
-.memory-board .card { min-height: 44px; touch-action: manipulation; user-select: none; }
