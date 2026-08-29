@@ -92,8 +92,11 @@ const PongGame = (() => {
     active = false;
     cancelAnimationFrame(animationId);
     const playerWon = winner === 'left';
-    Storage.updateStats('pong', playerWon);
-    if (playerWon) Storage.saveHighScore('pong', scores.left - scores.right);
+    if (mode() === 'local') Storage.updateMultiplayerStats('pong', playerWon ? 'player1' : 'player2');
+    else {
+      Storage.updateStats('pong', playerWon);
+      if (playerWon) Storage.saveHighScore('pong', scores.left - scores.right);
+    }
     updateUI(playerWon ? 'Player 1 wins the match!' : mode() === 'single' ? 'The computer wins the match.' : 'Player 2 wins the match.');
   }
 

@@ -57,6 +57,8 @@ the existing responsive breakpoints so controls wrap rather than overflow.
 
 ## Testing Guidelines
 
+Use registry `record` metadata rather than game IDs when rendering homepage records. New game pages need static title, meta description, canonical URL, favicon, and semantic keyboard-operable controls for interactive board cells.
+
 Manual browser testing is the project standard. For a new game or rule change,
 test normal play, invalid moves, win/loss states, restart, resizing, and a
 fresh page load. When changing registry or storage behavior, test every game

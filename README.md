@@ -30,6 +30,8 @@ The hub is rendered from `js/game-registry.js`; the registry declares each game'
 
 ## Design system
 
+Statistics are normalized on every read, keeping solo results (`gamesPlayed`, `wins`, `losses`) separate from local multiplayer results (`multiplayerMatches`, `player1Wins`, `player2Wins`, `draws`). Registry `record` metadata declares whether a homepage card uses a high score, lowest time, or statistics field.
+
 Alt Tab Tavern uses a dependency-free, CSS-first visual system. Shared palette tokens and homepage components live in `css/main.css`; shared game-page controls and panels live in `css/games.css`. Keep public branding as **Alt Tab Tavern**, use the warm `--accent` palette for primary actions, and reuse the shared button, status, and control-group classes on game pages. The homepage game cards use CSS-only artwork keyed by each registry ID, so no external images are required.
 
 Manual checks remain the project standard: launch all eight cards, switch every mode, verify restart/back navigation, test keyboard/touch behavior where available, and confirm saved scores after reload.

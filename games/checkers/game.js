@@ -156,8 +156,7 @@ const CheckersGame = (() => {
 
   function finish(winner) {
     gameActive = false;
-    Storage.updateStats('checkers', true);
-    Storage.saveHighScore('checkers', captures[winner]);
+    Storage.updateMultiplayerStats('checkers', winner === 'red' ? 'player1' : 'player2');
     render();
     updateUI();
     const modal = document.createElement('div');

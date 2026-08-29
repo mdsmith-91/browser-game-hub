@@ -11,7 +11,7 @@ function renderHub() {
   gamesContainer.innerHTML = '';
   GameRegistry.forEach(game => {
     const card = document.createElement('article');
-    const highScore = Storage.getHighScore(game.id);
+    const highScore = getRecord(game).value;
     const modeBadges = [
       game.singlePlayer ? '<span class="mode-badge">Solo</span>' : '',
       game.localMultiplayer ? '<span class="mode-badge">2 Players</span>' : '',
@@ -26,10 +26,23 @@ function renderHub() {
         <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
       </div>
       <div class="card-meta">
-        <span class="high-score">${game.highScoreLabel || 'High Score'}: ${highScore ?? '—'}</span>
+        <span class="high-score">${game.record?.label || 'High score'}: ${highScore ?? '—'}</span>
         <a class="play-btn" href="${game.url}" aria-label="Play ${game.title}">Play Now</a>
       </div>
     `;
     gamesContainer.appendChild(card);
   });
+}
+
+function getRecord(game) {
+  const record = game.record || { type: 'high' };
+  let value;
+  if (record.type === 'stat') value = Storage.getStats(game.id)[record.field];
+  else if (record.type === 'low-time') value = Storage.getBestScore(game.id);
+  else value = Storage.getHighScore(game.id);
+  return { value: value === null || value === undefined ? null : record.type === 'low-time' ? formatTime(value) : value };
+}
+
+function formatTime(seconds) {
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 }

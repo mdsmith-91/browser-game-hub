@@ -1,115 +1,34 @@
 const Storage = {
+  statsDefaults: { gamesPlayed: 0, wins: 0, losses: 0, multiplayerMatches: 0, player1Wins: 0, player2Wins: 0, draws: 0 },
   getHighScore(gameId) {
-    try {
-      const score = localStorage.getItem(`bgh_${gameId}_highscore`);
-      const parsed = Number.parseInt(score, 10);
-      return Number.isFinite(parsed) ? parsed : null;
-    } catch (e) {
-      console.warn('Failed to read high score:', e);
-      return null;
-    }
+    try { const score = Number.parseInt(localStorage.getItem(`bgh_${gameId}_highscore`), 10); return Number.isFinite(score) ? score : null; } catch (error) { console.warn('Failed to read high score:', error); return null; }
   },
-  
   saveHighScore(gameId, score) {
-    try {
-      const current = this.getHighScore(gameId);
-      if (current === null || score > current) {
-        localStorage.setItem(`bgh_${gameId}_highscore`, score);
-        return true; // New record
-      }
-      return false;
-    } catch (e) {
-      console.warn('Failed to save high score:', e);
-      return false;
-    }
+    if (!Number.isFinite(score)) return false;
+    try { const current = this.getHighScore(gameId); if (current === null || score > current) { localStorage.setItem(`bgh_${gameId}_highscore`, String(score)); return true; } } catch (error) { console.warn('Failed to save high score:', error); }
+    return false;
   },
-
-  getBestScore(gameId) {
-    return this.getHighScore(`${gameId}_best`);
-  },
-
+  getBestScore(gameId) { return this.getHighScore(`${gameId}_best`); },
   saveBestScore(gameId, score) {
-    try {
-      const current = this.getBestScore(gameId);
-      if (current === null || score < current) {
-        localStorage.setItem(`bgh_${gameId}_best_highscore`, score);
-        return true;
-      }
-      return false;
-    } catch (e) {
-      console.warn('Failed to save best score:', e);
-      return false;
-    }
+    if (!Number.isFinite(score)) return false;
+    try { const current = this.getBestScore(gameId); if (current === null || score < current) { localStorage.setItem(`bgh_${gameId}_best_highscore`, String(score)); return true; } } catch (error) { console.warn('Failed to save best score:', error); }
+    return false;
   },
-  
+  normalizeStats(value) {
+    const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    return Object.keys(this.statsDefaults).reduce((stats, key) => { const number = Number(source[key]); stats[key] = Number.isFinite(number) && number >= 0 ? Math.floor(number) : 0; return stats; }, {});
+  },
   getStats(gameId) {
-    try {
-      const data = localStorage.getItem(`bgh_${gameId}_stats`);
-      const parsed = data ? JSON.parse(data) : {};
-      return {
-        gamesPlayed: Number.isFinite(parsed.gamesPlayed) ? parsed.gamesPlayed : 0,
-        wins: Number.isFinite(parsed.wins) ? parsed.wins : 0
-      };
-    } catch (e) {
-      console.warn('Failed to read stats:', e);
-      return { gamesPlayed: 0, wins: 0 };
-    }
+    try { const data = localStorage.getItem(`bgh_${gameId}_stats`); return this.normalizeStats(data ? JSON.parse(data) : {}); } catch (error) { console.warn('Failed to read stats:', error); return this.normalizeStats({}); }
   },
-  
-  updateStats(gameId, win = false) {
-    try {
-      const stats = this.getStats(gameId);
-      stats.gamesPlayed += 1;
-      if (win) stats.wins += 1;
-      localStorage.setItem(`bgh_${gameId}_stats`, JSON.stringify(stats));
-      return stats;
-    } catch (e) {
-      console.warn('Failed to update stats:', e);
-      return { gamesPlayed: 0, wins: 0 };
-    }
+  saveStats(gameId, stats) { const normalized = this.normalizeStats(stats); localStorage.setItem(`bgh_${gameId}_stats`, JSON.stringify(normalized)); return normalized; },
+  updateStats(gameId, won = false) {
+    try { const stats = this.getStats(gameId); stats.gamesPlayed++; if (won) stats.wins++; else stats.losses++; return this.saveStats(gameId, stats); } catch (error) { console.warn('Failed to update stats:', error); return this.normalizeStats({}); }
   },
-
   updateMultiplayerStats(gameId, result) {
-    try {
-      const stats = this.getStats(gameId);
-      stats.multiplayerMatches = (Number.isFinite(stats.multiplayerMatches) ? stats.multiplayerMatches : 0) + 1;
-      if (result === 'player1') stats.player1Wins = (Number.isFinite(stats.player1Wins) ? stats.player1Wins : 0) + 1;
-      if (result === 'player2') stats.player2Wins = (Number.isFinite(stats.player2Wins) ? stats.player2Wins : 0) + 1;
-      if (result === 'draw') stats.draws = (Number.isFinite(stats.draws) ? stats.draws : 0) + 1;
-      localStorage.setItem(`bgh_${gameId}_stats`, JSON.stringify(stats));
-      return stats;
-    } catch (e) {
-      console.warn('Failed to update multiplayer stats:', e);
-      return { gamesPlayed: 0, wins: 0 };
-    }
+    try { const stats = this.getStats(gameId); stats.multiplayerMatches++; if (result === 'player1') stats.player1Wins++; else if (result === 'player2') stats.player2Wins++; else if (result === 'draw') stats.draws++; return this.saveStats(gameId, stats); } catch (error) { console.warn('Failed to update multiplayer stats:', error); return this.normalizeStats({}); }
   },
-  
   clearAll() {
-    try {
-      Object.keys(localStorage).filter(key => key.startsWith('bgh_')).forEach(key => localStorage.removeItem(key));
-      return true;
-    } catch (e) {
-      console.warn('Failed to clear storage:', e);
-      return false;
-    }
+    try { Object.keys(localStorage).filter(key => key.startsWith('bgh_')).forEach(key => localStorage.removeItem(key)); return true; } catch (error) { console.warn('Failed to clear storage:', error); return false; }
   }
 };
-
-if (window.location.pathname.startsWith('/games/')) {
-  if (!document.title.includes('Alt Tab Tavern')) {
-    document.title = `${document.title} | Alt Tab Tavern`;
-  }
-
-  const backToHub = document.getElementById('backToHub');
-  if (backToHub) {
-    backToHub.textContent = 'Back to Tavern';
-    backToHub.textContent = '← Back to Alt Tab Tavern';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const backToHub = document.getElementById('backToHub');
-  if (backToHub) backToHub.textContent = 'Back to Tavern';
-  const duelOption = document.querySelector('#mode-select option[value="duel"]');
-  if (duelOption) duelOption.textContent = 'Two Players';
-});

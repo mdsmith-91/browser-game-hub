@@ -76,11 +76,8 @@ const ConnectFour = (() => {
   function finish(draw) {
     gameActive = false;
     if (draw) scores.draws++;
-    else {
-      scores[currentPlayer]++;
-      Storage.saveHighScore('connect-four', scores.red + scores.yellow);
-      Storage.updateStats('connect-four', true);
-    }
+    else scores[currentPlayer]++;
+    Storage.updateMultiplayerStats('connect-four', draw ? 'draw' : currentPlayer === 'red' ? 'player1' : 'player2');
     updateUI();
     const modal = document.createElement('div');
     modal.className = 'game-over-modal';
@@ -90,9 +87,10 @@ const ConnectFour = (() => {
   }
 
   function updateUI() {
+    const stats = Storage.getStats('connect-four');
     document.getElementById('turn-indicator').textContent = currentPlayer === 'red' ? 'Red' : 'Yellow';
-    document.getElementById('red-wins').textContent = scores.red;
-    document.getElementById('draws').textContent = scores.draws;
+    document.getElementById('red-wins').textContent = stats.player1Wins;
+    document.getElementById('draws').textContent = stats.draws;
   }
 
   function keydown(event) {

@@ -2,7 +2,6 @@ const TicTacToe = (function() {
   let board = [];
   let currentPlayer = 'X';
   let gameActive = false;
-  let scores = { X: 0, O: 0, draws: 0 };
   const winningCombos = [
     [0,1,2], [3,4,5], [6,7,8], // rows
     [0,3,6], [1,4,7], [2,5,8], // cols
@@ -24,9 +23,14 @@ const TicTacToe = (function() {
     boardEl.innerHTML = '';
     
     for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
+      const cell = document.createElement('button');
+      cell.type = 'button';
       cell.className = `cell ${board[i] ? 'taken' : ''} ${board[i]?.toLowerCase()}`;
       cell.dataset.index = i;
+      const row = Math.floor(i / 3) + 1;
+      const column = i % 3 + 1;
+      cell.setAttribute('aria-label', `Row ${row}, column ${column}, ${board[i] || 'empty'}`);
+      cell.disabled = Boolean(board[i]) || !gameActive;
       
       if (board[i]) {
         cell.textContent = board[i];
@@ -44,9 +48,7 @@ const TicTacToe = (function() {
     board[index] = currentPlayer;
     
     // Update UI
-    const cells = document.querySelectorAll('.cell');
-    cells[index].textContent = currentPlayer;
-    cells[index].classList.add('taken', currentPlayer.toLowerCase());
+    renderBoard();
 
     // Check for win/draw
     if (checkWin()) {
@@ -79,15 +81,13 @@ const TicTacToe = (function() {
 
   function endGame(draw) {
     gameActive = false;
+    document.querySelectorAll('#game-board .cell').forEach(cell => { cell.disabled = true; });
     
     if (draw) {
-      scores.draws += 1;
-      Storage.updateStats('tic-tac-toe');
+      Storage.updateMultiplayerStats('tic-tac-toe', 'draw');
       showGameOver('Draw!', 'No one wins this round.');
     } else {
-      scores[currentPlayer] += 1;
-      Storage.saveHighScore('tic-tac-toe', scores.X);
-      Storage.updateStats('tic-tac-toe');
+      Storage.updateMultiplayerStats('tic-tac-toe', currentPlayer === 'X' ? 'player1' : 'player2');
       
       showGameOver(
         `Player ${currentPlayer} Wins!`,
@@ -125,9 +125,9 @@ const TicTacToe = (function() {
   }
 
   function updateStatsUI() {
-    document.getElementById('x-wins').textContent = scores.X;
-    document.getElementById('draws').textContent = scores.draws;
-    
+    const stats = Storage.getStats('tic-tac-toe');
+    document.getElementById('x-wins').textContent = stats.player1Wins;
+    document.getElementById('draws').textContent = stats.draws;
   }
 
   function restartGame() {
