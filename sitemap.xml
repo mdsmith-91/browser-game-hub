@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://alttabtavern.com/</loc></url>
-  <url><loc>https://alttabtavern.com/games/tic-tac-toe/</loc></url>
+  <url><loc>https://alttabtavern.com/games/battleship/</loc></url>
   <url><loc>https://alttabtavern.com/games/checkers/</loc></url>
+  <url><loc>https://alttabtavern.com/games/chess/</loc></url>
   <url><loc>https://alttabtavern.com/games/connect-four/</loc></url>
-  <url><loc>https://alttabtavern.com/games/snake/</loc></url>
-  <url><loc>https://alttabtavern.com/games/memory/</loc></url>
   <url><loc>https://alttabtavern.com/games/minesweeper/</loc></url>
   <url><loc>https://alttabtavern.com/games/pong/</loc></url>
-  <url><loc>https://alttabtavern.com/games/battleship/</loc></url>
+  <url><loc>https://alttabtavern.com/games/snake/</loc></url>
+  <url><loc>https://alttabtavern.com/games/tic-tac-toe/</loc></url>
 </urlset>

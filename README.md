@@ -23,19 +23,20 @@ Run the dependency-free checks from the repository root:
 ```powershell
 node tests/storage.test.js
 node tests/static.test.js
+node tests/chess.test.js
 ```
 
 Then serve the site and manually check the homepage, every registry route, each mode and restart flow, keyboard/touch input, saved records after reload, and the 320 px through desktop responsive layouts.
 
 ## Modes
 
-Tic-Tac-Toe, Checkers, and Connect Four are local two-player games. Pong supports Versus Computer and Two Players (Player 1: W/S; Player 2: arrow keys). Battleship supports Versus Computer and a private two-player hot-seat mode. Snake, Memory Match, and Minesweeper each offer Single Player and Two Players.
+Chess, Tic-Tac-Toe, Checkers, and Connect Four are local two-player games. Pong supports Versus Computer and Two Players (Player 1: W/S; Player 2: arrow keys). Battleship supports Versus Computer and a private two-player hot-seat mode. Snake and Minesweeper each offer Single Player and Two Players.
 
 Snake two-player mode is simultaneous and keyboard-first: Player 1 uses W/A/S/D and Player 2 uses arrow keys. A wall, body, or head-to-head collision loses the round; simultaneous crashes are a draw.
 
-Memory two-player mode alternates turns. A matching pair is worth one point and gives the same player another turn; the most pairs wins.
-
 Minesweeper Duel uses a shared beginner board. Players alternate valid reveals: every newly revealed safe cell is +1, a mine is -3 and passes the turn, and flags are disabled. The highest score after all safe cells are found wins.
+
+Chess implements complete local play, including check, checkmate, stalemate, castling, en passant, and promotion choices.
 
 Battleship hot-seat play has two private setup turns. After every setup and combat turn, a neutral handoff screen hides both boards until the next player selects Continue. Each player has Carrier (5), Battleship (4), Cruiser (3), Submarine (3), and Destroyer (2); rotate, randomize, and reset are available during placement.
 
@@ -52,13 +53,13 @@ Battleship hot-seat play has two private setup turns. After every setup and comb
 
 ## Architecture and persistence
 
-The hub is rendered from `js/game-registry.js`; the registry declares each game's supported modes. Shared score and aggregate statistics use established `bgh_` LocalStorage keys through `js/storage.js`. Each game remains self-contained under `games/<id>/`. The repository directory may remain `browser-game-hub`; the public site name is Alt Tab Tavern.
+The hub is rendered from `js/game-registry.js`; the registry declares each game's supported modes and sorts the library by title. Shared score and aggregate statistics use established `bgh_` LocalStorage keys through `js/storage.js`. Each game remains self-contained under `games/<id>/`. The repository directory may remain `browser-game-hub`; the public site name is Alt Tab Tavern.
 
 ## Design system
 
 Statistics are normalized on every read, keeping solo results (`gamesPlayed`, `wins`, `losses`) separate from local multiplayer results (`multiplayerMatches`, `player1Wins`, `player2Wins`, `draws`). Registry `record` metadata declares whether a homepage card uses a high score, lowest time, or statistics field.
 
-Alt Tab Tavern uses a dependency-free, CSS-first visual system. Shared palette tokens and homepage components live in `css/main.css`; shared game-page controls and panels live in `css/games.css`. Keep public branding as **Alt Tab Tavern**, use the warm `--accent` palette for primary actions, and reuse the shared button, status, and control-group classes on game pages. The homepage game cards use CSS-only artwork keyed by each registry ID, so no external images are required.
+Alt Tab Tavern uses a dependency-free, CSS-first visual system. Shared palette tokens and homepage components live in `css/main.css`; shared game-page controls and panels live in `css/games.css`. Keep public branding as **Alt Tab Tavern**, use the warm `--accent` palette for primary actions, and reuse the shared button, status, and control-group classes on game pages.
 
 Manual browser checks complement the dependency-free tests: launch every card, switch every mode, verify restart/back navigation, test keyboard/touch behavior where available, and confirm saved scores after reload.
 

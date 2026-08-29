@@ -9,7 +9,7 @@ scores and statistics, and `game-ui.js` provides the shared game-over dialog. Sh
 
 Each game is self-contained under `games/<game-id>/` with `index.html`,
 `style.css`, and `game.js`; current IDs include `snake`, `minesweeper`,
-`memory`, `connect-four`, `checkers`, `tic-tac-toe`, `pong`, and `battleship`. Keep game-specific
+`chess`, `connect-four`, `checkers`, `tic-tac-toe`, `pong`, and `battleship`. Keep game-specific
 DOM, styling, and logic inside that directory.
 
 Game metadata in `js/game-registry.js` declares supported modes. Use the

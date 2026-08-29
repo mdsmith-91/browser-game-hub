@@ -4,28 +4,23 @@ function renderHub() {
   const gamesContainer = document.querySelector('.game-grid');
   if (!gamesContainer) return;
 
-  document.querySelectorAll('[data-game-count]').forEach(element => {
-    element.textContent = GameRegistry.length;
-  });
-
   gamesContainer.innerHTML = '';
   GameRegistry.forEach(game => {
     const card = document.createElement('article');
-    const highScore = getRecord(game).value;
+    const record = game.record ? getRecord(game) : null;
     const modeBadges = game.gameModes.map(mode => {
       const label = mode === 'Single Player' ? 'Solo' : mode === 'Two Players' ? '2 Players' : 'Versus AI';
       return `<span class="mode-badge${mode === 'Versus Computer' ? ' ai' : ''}">${label}</span>`;
     }).join('');
     card.className = `game-card game-${game.id}`;
     card.innerHTML = `
-      <div class="card-icon" aria-hidden="true"><span class="card-art"></span></div>
       <div class="card-content">
         <h3>${game.title}</h3>
         <p>${game.description}</p>
         <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
       </div>
-      <div class="card-meta">
-        <span class="high-score"><span>${game.record?.label || 'High score'}</span><strong>${highScore ?? '—'}</strong></span>
+      <div class="card-meta${record ? '' : ' recordless'}">
+        ${record ? `<span class="high-score"><span>${game.record.label}</span><strong>${record.value ?? '—'}</strong></span>` : ''}
         <a class="play-btn" href="${game.url}" aria-label="Play ${game.title}">Play Now</a>
       </div>
     `;
