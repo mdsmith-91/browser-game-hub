@@ -28,4 +28,8 @@ Battleship hot-seat play has two private setup turns. After every setup and comb
 
 The hub is rendered from `js/game-registry.js`; the registry declares each game's supported modes. Shared score and aggregate statistics use established `bgh_` LocalStorage keys through `js/storage.js`. Each game remains self-contained under `games/<id>/`. The repository directory may remain `browser-game-hub`; the public site name is Alt Tab Tavern.
 
+## Design system
+
+Alt Tab Tavern uses a dependency-free, CSS-first visual system. Shared palette tokens and homepage components live in `css/main.css`; shared game-page controls and panels live in `css/games.css`. Keep public branding as **Alt Tab Tavern**, use the warm `--accent` palette for primary actions, and reuse the shared button, status, and control-group classes on game pages. The homepage game cards use CSS-only artwork keyed by each registry ID, so no external images are required.
+
 Manual checks remain the project standard: launch all eight cards, switch every mode, verify restart/back navigation, test keyboard/touch behavior where available, and confirm saved scores after reload.

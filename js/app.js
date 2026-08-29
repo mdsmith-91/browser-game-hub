@@ -12,13 +12,18 @@ function renderHub() {
   GameRegistry.forEach(game => {
     const card = document.createElement('article');
     const highScore = Storage.getHighScore(game.id);
-    card.className = 'game-card';
+    const modeBadges = [
+      game.singlePlayer ? '<span class="mode-badge">Solo</span>' : '',
+      game.localMultiplayer ? '<span class="mode-badge">2 Players</span>' : '',
+      game.aiOpponent ? '<span class="mode-badge ai">Versus AI</span>' : ''
+    ].join('');
+    card.className = `game-card game-${game.id}`;
     card.innerHTML = `
-      <div class="card-icon" aria-hidden="true">${game.icon}</div>
+      <div class="card-icon" aria-hidden="true"><span class="card-art"></span></div>
       <div class="card-content">
         <h3>${game.title}</h3>
         <p>${game.description}</p>
-        <p class="mode-summary">${game.playerCount} player${game.playerCount === '1' ? '' : 's'} &middot; Local multiplayer${game.aiOpponent ? ' &middot; AI opponent' : ''}</p>
+        <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
       </div>
       <div class="card-meta">
         <span class="high-score">${game.highScoreLabel || 'High Score'}: ${highScore ?? '—'}</span>

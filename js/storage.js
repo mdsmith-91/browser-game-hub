@@ -102,6 +102,14 @@ if (window.location.pathname.startsWith('/games/')) {
 
   const backToHub = document.getElementById('backToHub');
   if (backToHub) {
+    backToHub.textContent = 'Back to Tavern';
     backToHub.textContent = '← Back to Alt Tab Tavern';
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const backToHub = document.getElementById('backToHub');
+  if (backToHub) backToHub.textContent = 'Back to Tavern';
+  const duelOption = document.querySelector('#mode-select option[value="duel"]');
+  if (duelOption) duelOption.textContent = 'Two Players';
+});

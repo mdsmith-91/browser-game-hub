@@ -12,24 +12,29 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Alt Tab Tavern | Free Browser Games" />
   <meta name="twitter:description" content="Play classic browser games instantly with local multiplayer, no downloads, and no accounts required." />
+  <meta name="theme-color" content="#171512" />
   <title>Alt Tab Tavern | Free Browser Games</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/games.css" />
 </head>
 <body>
   <header class="site-header">
-    <a class="logo" href="/" aria-label="Alt Tab Tavern home">Alt Tab Tavern</a>
+    <a class="logo" href="/" aria-label="Alt Tab Tavern home"><span class="logo-mark" aria-hidden="true">A/T</span><span class="logo-wordmark">Alt Tab <span>Tavern</span></span></a>
     <nav class="main-nav" aria-label="Main navigation">
+      <a href="#games" class="nav-link">Games</a>
       <a href="#games" class="btn-primary btn-small">Browse Games</a>
     </nav>
   </header>
   <main id="app">
     <section class="hero" aria-labelledby="hero-title">
       <p class="eyebrow">Free browser games</p>
-      <h1 id="hero-title">ALT TAB TAVERN</h1>
+      <h1 id="hero-title">ALT TAB <span>TAVERN</span></h1>
       <p class="hero-tagline">Pick a game. Grab a friend. Play.</p>
       <p class="hero-copy">Classic browser games with no downloads, accounts, or installs required.</p>
       <a href="#games" class="hero-cta">Play <span data-game-count>8</span> Games</a>
+      <div class="feature-strip" aria-label="Alt Tab Tavern features"><span class="feature-pill">Instant play</span><span class="feature-pill">Local multiplayer</span><span class="feature-pill">Saved scores</span><span class="feature-pill">Mobile friendly</span></div>
+      <div class="hero-art" aria-hidden="true"><span class="hero-token grid"></span><span class="hero-token discs"></span><span class="hero-token keys"></span></div>
     </section>
     <section class="features" aria-labelledby="features-title">
       <div class="section-intro">
@@ -49,6 +54,7 @@
         <p class="eyebrow">Choose your table</p>
         <h2 id="games-title"><span data-game-count>8</span> games, ready when you are</h2>
       </div>
+      <p class="game-night-note"><strong>Game night, no setup required.</strong> Eight games, one screen, and plenty of local rivalries.</p>
       <div class="game-grid" aria-label="Available games"></div>
     </section>
   </main>

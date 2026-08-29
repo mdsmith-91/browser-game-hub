@@ -43,6 +43,16 @@ expose only integration points required by the hub, such as `window.initGame`.
 No formatter or linter is configured. Preserve the existing style and verify
 changes in a browser before submitting them.
 
+## Shared Design Conventions
+
+Use the semantic shared color tokens in `css/main.css` (`--bg`, `--surface`,
+`--surface-elevated`, `--text`, `--text-muted`, `--accent`, `--border`, and
+status colors) instead of introducing one-off theme colors. Reuse the shared
+`btn-primary`, `btn-secondary`, `game-btn`, `control-group`, and `stat-box`
+styles for game controls. Public navigation back to the hub should read
+**Back to Tavern**. Keep card artwork lightweight and CSS/SVG-only, and retain
+the existing responsive breakpoints so controls wrap rather than overflow.
+
 ## Testing Guidelines
 
 Manual browser testing is the project standard. For a new game or rule change,
