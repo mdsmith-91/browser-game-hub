@@ -1,0 +1,63 @@
+.minesweeper-board {
+  display: grid;
+  gap: 1px;
+  max-width: 90vw;
+  margin: 0 auto;
+  overflow: auto;
+  justify-content: start;
+}
+
+.cell {
+  width: clamp(24px, 5vw, 36px);
+  height: clamp(24px, 5vw, 36px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  border: 0;
+  padding: 0;
+}
+
+.cell.hidden {
+  background-color: #4a5568;
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), inset 2px 2px 4px rgba(255,255,255,0.1);
+}
+
+.cell.revealed {
+  background-color: #edf2f7;
+  box-shadow: none;
+}
+
+.cell.mine {
+  background-color: #e53e3e !important;
+}
+
+.cell.flagged::before {
+  content: '🚩';
+}
+
+.cell.revealed-number-1 { color: #3182ce; }
+.cell.revealed-number-2 { color: #38a169; }
+.cell.revealed-number-3 { color: #e53e3e; }
+.cell.revealed-number-4 { color: #744210; }
+.cell.revealed-number-5 { color: #c53030; }
+.cell.revealed-number-6 { color: #319795; }
+.cell.revealed-number-7 { color: #2d3748; }
+.cell.revealed-number-8 { color: #718096; }
+
+.game-over-screen {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 100;
+}
+
+#game-board.reveal-all .cell.mine::before { content: '💣'; }
+#game-board.reveal-all .cell.flagged.wrong-flag::after { content: '❌'; font-size: 1.2rem; }
+
+@media (max-width: 600px) {
+  .cell { width: clamp(32px, 8vw, 48px); height: clamp(32px, 8vw, 48px); }
+}

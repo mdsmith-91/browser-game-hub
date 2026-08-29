@@ -1,0 +1,67 @@
+.connect4-board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cell {
+  width: clamp(40px, 11vw, 80px);
+  height: clamp(40px, 11vw, 80px);
+  background-color: #3182ce;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.cell:hover {
+  transform: scale(1.05);
+}
+
+.cell.empty::before {
+  content: '';
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background-color: #2b6cb0;
+}
+
+.piece {
+  position: absolute;
+  top: 10%; left: 10%;
+  width: 80%; height: 80%;
+  border-radius: 50%;
+  animation: dropPiece 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+}
+
+@keyframes dropPiece {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.piece.red {
+  background-color: #e53e3e;
+  box-shadow: inset -4px -4px 8px rgba(0,0,0,0.3);
+}
+
+.piece.yellow {
+  background-color: #ecc94b;
+  box-shadow: inset -4px -4px 8px rgba(0,0,0,0.3);
+}
+
+.cell.highlight-column {
+  background-color: #63b3ed !important;
+  transform: scale(1.05);
+}
+
+.winning-pieces .piece {
+  animation: pulseWin 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulseWin {
+  from { box-shadow: inset -4px -4px 8px rgba(0,0,0,0.3); }
+  to { box-shadow: inset -6px -6px 12px var(--accent), 0 0 15px var(--accent); }
+}

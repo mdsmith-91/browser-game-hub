@@ -1,0 +1,29 @@
+#game-board {
+  display: block;
+  margin: 0 auto;
+  background-color: #2d3748;
+  border-radius: var(--border-radius);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.snake-head {
+  background-color: #48bb78 !important;
+  z-index: 10;
+}
+
+.snake-body {
+  background-color: #38a169 !important;
+}
+
+.food {
+  background-color: #f56565 !important;
+  border-radius: 50%;
+}
+
+.game-over-screen {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 100;
+}

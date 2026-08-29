@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/games.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="game-container">
+    <a href="#" id="backToHub" class="back-btn">← Back to Hub</a>
+    <h2 class="game-title">Tic-Tac-Toe</h2>
+    
+    <div class="game-header">
+      <div class="game-controls">
+        <button class="btn-secondary game-btn restart-btn">🔄 New Game</button>
+        <div class="control-group">
+          <span class="stat-box">
+          <div class="label">Current Player (X / O)</div>
+            <div class="value" id="turn-indicator">X</div>
+          </span>
+        </div>
+      </div>
+      
+      <div class="game-info-bar">
+        <div class="stat-box">
+          <div class="label">Player 1 Wins (X)</div>
+          <div class="value" id="x-wins">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Draws</div>
+          <div class="value" id="draws">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-board" class="board-3x3"></div>
+    
+    <p class="board-labels">Players take turns clicking cells. First to 3 in a row wins!</p>
+
+    <!-- Touch controls (hidden on desktop) -->
+    <div class="touch-controls">
+      <button class="touch-control-btn restart-btn" title="Restart Game">🔄</button>
+    </div>
+  </div>
+
+  <script src="/js/storage.js"></script>
+  <script src="/games/tic-tac-toe/game.js"></script>
+</body>
+</html>
