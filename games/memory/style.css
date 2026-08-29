@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  max-width: 600px;
+  max-width: min(600px, 100%);
   margin: 0 auto;
 }
 
@@ -10,6 +10,9 @@
   aspect-ratio: 1;
   perspective: 1000px;
   cursor: pointer;
+  min-height: 44px;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .card-inner {
@@ -66,5 +69,8 @@
 }
 
 @media (max-width: 600px) {
-  .memory-board { gap: 0.3rem; }
+  .memory-board { gap: .45rem; }
 }
+
+.memory-board { max-width: min(600px, 100%); }
+.memory-board .card { min-height: 44px; touch-action: manipulation; user-select: none; }

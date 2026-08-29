@@ -4,6 +4,8 @@
   gap: 0.3rem;
   max-width: 600px;
   margin: 0 auto;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .cell {
@@ -14,6 +16,7 @@
   position: relative;
   cursor: pointer;
   transition: transform 0.1s ease;
+  touch-action: manipulation;
 }
 
 .cell:hover {
@@ -65,3 +68,5 @@
   from { box-shadow: inset -4px -4px 8px rgba(0,0,0,0.3); }
   to { box-shadow: inset -6px -6px 12px var(--accent), 0 0 15px var(--accent); }
 }
+
+.connect4-board, .connect4-board .cell { touch-action: manipulation; user-select: none; }

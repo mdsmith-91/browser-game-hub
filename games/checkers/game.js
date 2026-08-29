@@ -57,6 +57,12 @@ const CheckersGame = (() => {
 
   function handleCell(row, col) {
     if (!gameActive) return;
+    if (selectedPiece?.row === row && selectedPiece.col === col && !mustContinueFrom) {
+      selectedPiece = null;
+      legalMoves = [];
+      render();
+      return;
+    }
     const piece = board[row][col];
     if (piece?.color === currentPlayer && (!mustContinueFrom || (mustContinueFrom.row === row && mustContinueFrom.col === col))) {
       const capturesRequired = Boolean(mustContinueFrom) || playerHasCapture(currentPlayer);

@@ -33,3 +33,9 @@ The hub is rendered from `js/game-registry.js`; the registry declares each game'
 Alt Tab Tavern uses a dependency-free, CSS-first visual system. Shared palette tokens and homepage components live in `css/main.css`; shared game-page controls and panels live in `css/games.css`. Keep public branding as **Alt Tab Tavern**, use the warm `--accent` palette for primary actions, and reuse the shared button, status, and control-group classes on game pages. The homepage game cards use CSS-only artwork keyed by each registry ID, so no external images are required.
 
 Manual checks remain the project standard: launch all eight cards, switch every mode, verify restart/back navigation, test keyboard/touch behavior where available, and confirm saved scores after reload.
+
+## Mobile and touch support
+
+Every game page uses a mobile viewport and touch-sized primary controls. Board games use tap targets and retain keyboard and mouse support. Minesweeper has a visible **Flag mode** toggle on touch devices (right-click still flags on desktop); larger Minesweeper boards scroll within their board area rather than shrinking cells below a usable size.
+
+Snake supports a portrait D-pad and board swipes in single-player mode. Its simultaneous two-player mode remains keyboard recommended: Player 1 uses W/A/S/D and Player 2 uses arrow keys. Pong supports direct paddle dragging on the playfield; two-player touch Pong is best on a tablet, where each player can drag in their half of the playfield. Battleship uses tap-to-select ships, rotate, and tap-to-place, with stacked boards on phones and private handoff screens for local play.

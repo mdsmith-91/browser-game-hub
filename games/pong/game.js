@@ -146,6 +146,15 @@ const PongGame = (() => {
     if (enabled) pressed.add(key); else pressed.delete(key);
   }
 
+  function moveTouchPaddle(event) {
+    if (!active || event.pointerType === 'mouse' && event.buttons === 0) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width * WIDTH;
+    const y = (event.clientY - rect.top) / rect.height * HEIGHT;
+    const target = mode() === 'local' && x > WIDTH / 2 ? right : left;
+    target.y = Math.max(0, Math.min(HEIGHT - paddle.height, y - paddle.height / 2));
+  }
+
   function setup() {
     document.getElementById('backToHub').href = '/';
     document.querySelectorAll('.restart-btn').forEach(button => button.addEventListener('click', newMatch));
@@ -153,6 +162,8 @@ const PongGame = (() => {
     document.getElementById('difficulty-select').addEventListener('change', newMatch);
     document.addEventListener('keydown', keydown);
     document.addEventListener('keyup', keyup);
+    canvas.addEventListener('pointerdown', event => { if (event.pointerType !== 'mouse') canvas.setPointerCapture(event.pointerId); moveTouchPaddle(event); });
+    canvas.addEventListener('pointermove', moveTouchPaddle);
     document.querySelectorAll('.pong-touch-controls button').forEach(button => {
       button.addEventListener('pointerdown', event => { event.preventDefault(); setTouch(button, true); });
       ['pointerup', 'pointercancel', 'pointerleave'].forEach(name => button.addEventListener(name, () => setTouch(button, false)));

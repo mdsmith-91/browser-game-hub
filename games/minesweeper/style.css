@@ -1,15 +1,17 @@
 .minesweeper-board {
   display: grid;
   gap: 1px;
-  max-width: 90vw;
+  max-width: 100%;
   margin: 0 auto;
   overflow: auto;
   justify-content: start;
+  padding: 2px;
+  touch-action: manipulation;
 }
 
 .cell {
-  width: clamp(24px, 5vw, 36px);
-  height: clamp(24px, 5vw, 36px);
+  width: 36px;
+  height: 36px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,5 +61,7 @@
 #game-board.reveal-all .cell.flagged.wrong-flag::after { content: '❌'; font-size: 1.2rem; }
 
 @media (max-width: 600px) {
-  .cell { width: clamp(32px, 8vw, 48px); height: clamp(32px, 8vw, 48px); }
+  .cell { width: 36px; height: 36px; }
 }
+
+.minesweeper-board { max-width: 100%; padding: 2px; touch-action: manipulation; }

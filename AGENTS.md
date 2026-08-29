@@ -40,6 +40,8 @@ and kebab-case for CSS classes, file names, and game IDs (for example
 `games/connect-four/`). Prefer `const` and `let`; keep globals intentional and
 expose only integration points required by the hub, such as `window.initGame`.
 
+For touch input, make primary controls at least roughly 44 by 44 CSS pixels where practical. Use Pointer Events for drag or multi-touch gameplay surfaces, use `touch-action: manipulation` for ordinary controls, and reserve `touch-action: none` for canvases or surfaces that actively need to suppress gestures. Keep page scrolling and pinch zoom available outside active game surfaces. Be explicit when local multiplayer is keyboard-first or tablet-best rather than practical on a phone.
+
 No formatter or linter is configured. Preserve the existing style and verify
 changes in a browser before submitting them.
 
