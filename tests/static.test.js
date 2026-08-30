@@ -17,7 +17,6 @@ const expectedModes = {
   chess: ['Two Players', 'Versus Computer'],
   'connect-four': ['Two Players', 'Versus Computer'],
   'crazy-eights': ['Versus Computer'],
-  darts: ['Single Player', 'Two Players'],
   'falling-blocks': ['Single Player'],
   'gin-rummy': ['Versus Computer'],
   'go-fish': ['Versus Computer'],
@@ -33,7 +32,7 @@ const expectedModes = {
 };
 const modePageLabels = { 'Single Player': 'Single Player', 'Two Players': 'Two Players', 'Versus Computer': 'Versus AI' };
 
-assert.strictEqual(games.length, 20, 'The live catalog must contain exactly the intended 20 games.');
+assert.strictEqual(games.length, 19, 'The live catalog must contain exactly the intended 19 games.');
 assert.strictEqual(new Set(games.map(game => game.id)).size, games.length, 'Game IDs must be unique.');
 assert.deepStrictEqual(
   Array.from(games, game => game.title),
@@ -55,7 +54,6 @@ const expectedCategories = {
   chess: 'board-games',
   'connect-four': 'board-games',
   'crazy-eights': 'card-games',
-  darts: 'tavern-games',
   'falling-blocks': 'arcade',
   'gin-rummy': 'card-games',
   'go-fish': 'card-games',
