@@ -18,7 +18,7 @@ const expectedModes = {
   'go-fish': ['Versus Computer'],
   minesweeper: ['Single Player'],
   pong: ['Two Players', 'Versus Computer'],
-  snake: ['Single Player', 'Two Players'],
+  snake: ['Single Player'],
   solitaire: ['Single Player'],
   'tic-tac-toe': ['Two Players', 'Versus Computer']
 };
@@ -60,6 +60,7 @@ for (const game of games) {
 }
 
 assert.deepStrictEqual(Array.from(games.find(game => game.id === 'blackjack').tags), ['1 Player'], 'Blackjack should not carry an AI tag for its fixed dealer.');
+assert.deepStrictEqual(Array.from(games.find(game => game.id === 'snake').tags), ['1 Player'], 'Snake should be labeled as a one-player game.');
 assert.deepStrictEqual(Array.from(games.find(game => game.id === 'crazy-eights').tags), ['1 Player', 'AI']);
 assert.deepStrictEqual(Array.from(games.find(game => game.id === 'go-fish').tags), ['1 Player', 'AI']);
 

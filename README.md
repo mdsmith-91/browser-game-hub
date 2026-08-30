@@ -32,9 +32,9 @@ Then serve the site and manually check the homepage, every registry route, each 
 
 ## Modes
 
-Chess, Tic-Tac-Toe, Checkers, and Connect Four support both a local two-player game and a responsive casual AI opponent. Pong supports Versus AI and Two Players (Player 1: W/S; Player 2: arrow keys). Battleship supports Versus AI and a private two-player hot-seat mode. Snake offers Single Player and genuine simultaneous Two Players; Minesweeper is Single Player only.
+Chess, Tic-Tac-Toe, Checkers, and Connect Four support both a local two-player game and a responsive casual AI opponent. Pong supports Versus AI and Two Players (Player 1: W/S; Player 2: arrow keys). Battleship supports Versus AI and a private two-player hot-seat mode.
 
-Snake two-player mode is simultaneous and keyboard-first: Player 1 uses W/A/S/D and Player 2 uses arrow keys. A wall, body, or head-to-head collision loses the round; simultaneous crashes are a draw.
+Snake and Minesweeper are Single Player only.
 
 Blackjack is a casual single-player game against a fixed-rules dealer that draws to 16 and stands on 17. It handles soft Aces, naturals, busts, and pushes without presenting the dealer as an AI opponent.
 
@@ -81,7 +81,7 @@ Manual browser checks complement the dependency-free tests: launch every card, s
 
 Every game page uses a mobile viewport and touch-sized primary controls. Board games use tap targets and retain keyboard and mouse support. Minesweeper has a visible **Flag mode** toggle on touch devices (right-click still flags on desktop); larger Minesweeper boards scroll within their board area rather than shrinking cells below a usable size.
 
-Snake supports a portrait D-pad and board swipes in single-player mode. Its simultaneous two-player mode remains keyboard recommended: Player 1 uses W/A/S/D and Player 2 uses arrow keys. Pong supports direct paddle dragging on the playfield; two-player touch Pong is best on a tablet, where each player can drag in their half of the playfield. Battleship uses tap-to-select ships, rotate, and tap-to-place, with stacked boards on phones and private handoff screens for local play.
+Snake supports a portrait D-pad, board swipes, and arrow or WASD keyboard controls. Pong supports direct paddle dragging on the playfield; two-player touch Pong is best on a tablet, where each player can drag in their half of the playfield. Battleship uses tap-to-select ships, rotate, and tap-to-place, with stacked boards on phones and private handoff screens for local play.
 
 ## Deployment
 

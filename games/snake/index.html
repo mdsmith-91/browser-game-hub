@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Play Snake solo or in a simultaneous local two-player match at Alt Tab Tavern." />
+  <meta name="description" content="Play classic Snake and chase your high score at Alt Tab Tavern." />
   <link rel="canonical" href="https://alttabtavern.com/games/snake/" />
   <meta property="og:title" content="Snake | Alt Tab Tavern" />
-  <meta property="og:description" content="Play Snake solo or in a simultaneous local two-player match at Alt Tab Tavern." />
+  <meta property="og:description" content="Play classic Snake and chase your high score at Alt Tab Tavern." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://alttabtavern.com/games/snake/" />
   <meta name="theme-color" content="#171512" />
@@ -23,24 +23,18 @@
     <div class="game-header">
       <div class="game-controls">
         <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
-        <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="single">Single Player</option><option value="two">Two Players</option></select></label>
-        <div class="stat-box"><span class="label">Player 1 score</span><span class="value" id="score">0</span></div>
-        <div class="stat-box"><span class="label">Player 2 score</span><span class="value" id="player-two-score">-</span></div>
+        <div class="stat-box"><span class="label">Score</span><span class="value" id="score">0</span></div>
       </div>
       <div class="game-info-bar">
         <div class="stat-box"><span class="label">High score</span><span class="value" id="high-score-display">0</span></div>
         <div class="stat-box"><span class="label">Games Played</span><span class="value" id="games-played">0</span></div>
-        <div class="stat-box"><span class="label">Wins</span><span class="value" id="wins">0</span></div>
-        <div class="stat-box"><span class="label">Losses</span><span class="value" id="losses">0</span></div>
-        <div class="stat-box"><span class="label">Draws</span><span class="value" id="draws">0</span></div>
         <div class="stat-box"><span class="label">Time Played</span><span class="value" id="time-played">0m 0s</span></div>
         <div class="stat-box"><span class="label">Level</span><span class="value" id="level">1</span></div>
         <div class="stat-box"><span class="label">Speed</span><span class="value" id="speed-display">Normal</span></div>
       </div>
     </div>
     <canvas id="game-board" role="img" aria-label="Snake game board"></canvas>
-    <p id="snake-status" class="board-labels" aria-live="polite"></p>
-    <p class="board-labels">Two Players is keyboard-first: Player 1 uses W/A/S/D and Player 2 uses the arrow keys.</p>
+    <p id="snake-status" class="board-labels" aria-live="polite">Single Player Snake: swipe the board, use the D-pad, or use arrows/WASD to move.</p>
     <div class="touch-controls" aria-label="Snake direction controls">
       <button type="button" class="touch-control-btn" data-dir="up">Up</button>
       <button type="button" class="touch-control-btn" data-dir="left">Left</button>
