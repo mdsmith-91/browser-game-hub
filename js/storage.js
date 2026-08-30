@@ -1,17 +1,20 @@
 const Storage = {
   prefix: 'bgh_',
+  statsVersion: 2,
   statsDefaults: {
     gamesPlayed: 0,
     wins: 0,
     losses: 0,
-    multiplayerMatches: 0,
-    player1Wins: 0,
-    player2Wins: 0,
-    draws: 0
+    draws: 0,
+    timePlayed: 0
   },
 
   scoreKey(gameId) {
     return `${this.prefix}${gameId}_highscore`;
+  },
+
+  statsKey(gameId) {
+    return `${this.prefix}${gameId}_stats`;
   },
 
   getHighScore(gameId) {
@@ -60,19 +63,39 @@ const Storage = {
     return false;
   },
 
+  normalizeNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number) && number >= 0 ? Math.floor(number) : 0;
+  },
+
   normalizeStats(value) {
     const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
     return Object.keys(this.statsDefaults).reduce((stats, key) => {
-      const number = Number(source[key]);
-      stats[key] = Number.isFinite(number) && number >= 0 ? Math.floor(number) : 0;
+      stats[key] = this.normalizeNumber(source[key]);
       return stats;
     }, {});
   },
 
+  migrateStats(value, gameId) {
+    const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    if (source._version === this.statsVersion) return this.normalizeStats(source);
+    const stats = this.normalizeStats(source);
+    if (gameId !== 'minesweeper') {
+      stats.gamesPlayed += this.normalizeNumber(source.multiplayerMatches);
+      stats.wins += this.normalizeNumber(source.player1Wins);
+      stats.losses += this.normalizeNumber(source.player2Wins);
+    } else stats.draws = 0;
+    return stats;
+  },
+
   getStats(gameId) {
     try {
-      const data = localStorage.getItem(`${this.prefix}${gameId}_stats`);
-      return this.normalizeStats(data ? JSON.parse(data) : {});
+      const data = localStorage.getItem(this.statsKey(gameId));
+      if (!data) return this.normalizeStats({});
+      const source = JSON.parse(data);
+      const stats = this.migrateStats(source, gameId);
+      if (source?._version !== this.statsVersion) this.saveStats(gameId, stats);
+      return stats;
     } catch (error) {
       console.warn('Failed to read stats:', error);
       return this.normalizeStats({});
@@ -82,29 +105,82 @@ const Storage = {
   saveStats(gameId, stats) {
     const normalized = this.normalizeStats(stats);
     try {
-      localStorage.setItem(`${this.prefix}${gameId}_stats`, JSON.stringify(normalized));
+      localStorage.setItem(this.statsKey(gameId), JSON.stringify({ ...normalized, _version: this.statsVersion }));
     } catch (error) {
       console.warn('Failed to save stats:', error);
     }
     return normalized;
   },
 
-  updateStats(gameId, won = false) {
+  recordResult(gameId, result) {
+    if (!['win', 'loss', 'draw', 'complete'].includes(result)) return this.getStats(gameId);
     const stats = this.getStats(gameId);
     stats.gamesPlayed++;
-    if (won) stats.wins++;
-    else stats.losses++;
+    if (result === 'win') stats.wins++;
+    else if (result === 'loss') stats.losses++;
+    else if (result === 'draw') stats.draws++;
     return this.saveStats(gameId, stats);
+  },
+
+  updateStats(gameId, won = false) {
+    return this.recordResult(gameId, won ? 'win' : 'loss');
   },
 
   updateMultiplayerStats(gameId, result) {
     if (!['player1', 'player2', 'draw'].includes(result)) return this.getStats(gameId);
+    return this.recordResult(gameId, result === 'player1' ? 'win' : result === 'player2' ? 'loss' : 'draw');
+  },
+
+  addTimePlayed(gameId, seconds) {
+    const elapsed = this.normalizeNumber(seconds);
+    if (!elapsed) return this.getStats(gameId);
     const stats = this.getStats(gameId);
-    stats.multiplayerMatches++;
-    if (result === 'player1') stats.player1Wins++;
-    else if (result === 'player2') stats.player2Wins++;
-    else stats.draws++;
+    stats.timePlayed += elapsed;
     return this.saveStats(gameId, stats);
+  },
+
+  createPlayTimer(gameId) {
+    let active = false;
+    let running = false;
+    let startedAt = 0;
+    let elapsedMs = 0;
+    const now = () => typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+    const pageVisible = () => typeof document === 'undefined' || document.visibilityState !== 'hidden';
+    const pause = () => {
+      if (!running) return;
+      elapsedMs += Math.max(0, now() - startedAt);
+      running = false;
+    };
+    const resume = () => {
+      if (!active || running || !pageVisible()) return;
+      startedAt = now();
+      running = true;
+    };
+    const visibilityChange = () => pageVisible() && active ? resume() : pause();
+    if (typeof document !== 'undefined') document.addEventListener('visibilitychange', visibilityChange);
+
+    return {
+      start() {
+        active = true;
+        resume();
+      },
+      stop() {
+        active = false;
+        pause();
+        const seconds = Math.floor(elapsedMs / 1000);
+        elapsedMs -= seconds * 1000;
+        if (seconds) Storage.addTimePlayed(gameId, seconds);
+        return seconds;
+      },
+      reset() {
+        this.stop();
+        elapsedMs = 0;
+      },
+      destroy() {
+        this.stop();
+        if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', visibilityChange);
+      }
+    };
   },
 
   clearAll() {
@@ -119,3 +195,9 @@ const Storage = {
     }
   }
 };
+
+try {
+  ['bgh_battleship_highscore', 'bgh_pong_highscore'].forEach(key => localStorage.removeItem(key));
+} catch (error) {
+  console.warn('Failed to remove obsolete records:', error);
+}

@@ -6,6 +6,7 @@ const PongGame = (() => {
   const canvas = document.getElementById('pong-board');
   const context = canvas.getContext('2d');
   const pressed = new Set();
+  const playTimer = Storage.createPlayTimer('pong');
   let left;
   let right;
   let ball;
@@ -16,6 +17,7 @@ const PongGame = (() => {
 
   function newMatch() {
     cancelAnimationFrame(animationId);
+    playTimer.reset();
     pressed.clear();
     scores = { left: 0, right: 0 };
     left = { y: (HEIGHT - paddle.height) / 2 };
@@ -24,6 +26,7 @@ const PongGame = (() => {
     active = true;
     lastFrame = performance.now();
     updateUI();
+    playTimer.start();
     animationId = requestAnimationFrame(loop);
   }
 
@@ -93,12 +96,9 @@ const PongGame = (() => {
   function finish(winner) {
     active = false;
     cancelAnimationFrame(animationId);
+    playTimer.stop();
     const playerWon = winner === 'left';
-    if (mode() === 'local') Storage.updateMultiplayerStats('pong', playerWon ? 'player1' : 'player2');
-    else {
-      Storage.updateStats('pong', playerWon);
-      if (playerWon) Storage.saveHighScore('pong', scores.left - scores.right);
-    }
+    Storage.recordResult('pong', playerWon ? 'win' : 'loss');
     updateUI(playerWon ? 'Player 1 wins the match!' : mode() === 'single' ? 'The computer wins the match.' : 'Player 2 wins the match.');
   }
 
@@ -126,9 +126,13 @@ const PongGame = (() => {
   function mode() { return document.getElementById('mode-select').value; }
 
   function updateUI(message) {
+    const stats = Storage.getStats('pong');
     document.getElementById('player-one-score').textContent = scores.left;
     document.getElementById('player-two-score').textContent = scores.right;
-    document.getElementById('best-difference').textContent = Storage.getHighScore('pong') || 0;
+    document.getElementById('games-played').textContent = stats.gamesPlayed;
+    document.getElementById('wins').textContent = stats.wins;
+    document.getElementById('losses').textContent = stats.losses;
+    document.getElementById('time-played').textContent = `${Math.floor(stats.timePlayed / 60)}m ${stats.timePlayed % 60}s`;
     document.getElementById('pong-status').textContent = message || `First to ${WINNING_SCORE} wins. ${mode() === 'single' ? 'You are Player 1.' : 'Local two-player match.'}`;
     document.getElementById('difficulty-control').hidden = mode() === 'local';
     document.getElementById('player-two-touch').hidden = mode() === 'single';
@@ -181,6 +185,7 @@ const PongGame = (() => {
   function cleanup() {
     active = false;
     cancelAnimationFrame(animationId);
+    playTimer.stop();
     pressed.clear();
     document.removeEventListener('keydown', keydown);
     document.removeEventListener('keyup', keyup);

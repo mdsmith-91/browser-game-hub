@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Play a complete local two-player game of chess in your browser." />
+  <meta name="description" content="Play complete browser chess against a casual AI or a local friend at Alt Tab Tavern." />
   <link rel="canonical" href="https://alttabtavern.com/games/chess/" />
   <meta property="og:title" content="Chess | Alt Tab Tavern" />
-  <meta property="og:description" content="Play a complete local two-player game of chess in your browser." />
+  <meta property="og:description" content="Play complete browser chess against a casual AI or a local friend at Alt Tab Tavern." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://alttabtavern.com/games/chess/" />
   <meta name="theme-color" content="#171512" />
@@ -23,9 +23,17 @@
     <div class="game-header">
       <div class="game-controls">
         <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
+        <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="computer">Versus AI</option><option value="two">Two Players</option></select></label>
         <div class="control-group"><span>Current player</span><strong class="turn-value" id="turn-indicator">White</strong></div>
       </div>
       <p id="chess-status" class="chess-status" aria-live="polite">White to move.</p>
+      <div class="game-info-bar">
+        <div class="stat-box"><span class="label">Games Played</span><span class="value" id="games-played">0</span></div>
+        <div class="stat-box"><span class="label">Wins</span><span class="value" id="wins">0</span></div>
+        <div class="stat-box"><span class="label">Losses</span><span class="value" id="losses">0</span></div>
+        <div class="stat-box"><span class="label">Draws</span><span class="value" id="draws">0</span></div>
+        <div class="stat-box"><span class="label">Time Played</span><span class="value" id="time-played">0m 0s</span></div>
+      </div>
     </div>
     <div id="chess-board" class="chess-board" role="grid" aria-label="Chess board"></div>
     <p class="board-labels">Select a piece, then a highlighted square. Use arrow keys to move between squares.</p>
@@ -36,6 +44,7 @@
       <div class="promotion-choices"></div>
     </div>
   </div>
+  <script src="/js/storage.js"></script>
   <script src="/js/game-ui.js"></script>
   <script src="/games/chess/game.js"></script>
 </body>

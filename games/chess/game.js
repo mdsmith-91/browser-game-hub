@@ -306,16 +306,25 @@ if (typeof document !== 'undefined') {
       bk: '♚', bq: '♛', br: '♜', bb: '♝', bn: '♞', bp: '♟'
     };
     const pieceNames = { k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' };
+    const pieceValues = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 0 };
+    const playTimer = Storage.createPlayTimer('chess');
     let engine;
     let selected = null;
     let legalMoves = [];
     let pendingPromotion = null;
+    let aiTimer = null;
+
+    function mode() {
+      return document.getElementById('mode-select').value;
+    }
 
     function sameSquare(first, second) {
       return first && second && first.row === second.row && first.col === second.col;
     }
 
     function initialise() {
+      clearTimeout(aiTimer);
+      playTimer.reset();
       GameUI.clearGameOver();
       closePromotion();
       engine = new ChessEngine();
@@ -325,7 +334,7 @@ if (typeof document !== 'undefined') {
     }
 
     function selectSquare(position) {
-      if (pendingPromotion || engine.status !== 'active') return;
+      if (pendingPromotion || engine.status !== 'active' || (mode() === 'computer' && engine.turn === 'b')) return;
       const piece = engine.board[position.row][position.col];
       const chosenMove = legalMoves.find(move => sameSquare(move.to, position));
       if (selected && chosenMove) {
@@ -347,14 +356,83 @@ if (typeof document !== 'undefined') {
     }
 
     function completeMove(move, promotion) {
+      playTimer.start();
       engine.move(move.from, move.to, promotion);
       selected = null;
       legalMoves = [];
       render();
+      if (engine.status !== 'active') finish();
+      else if (mode() === 'computer' && engine.turn === 'b') scheduleComputerMove();
+    }
+
+    function cloneEngine(source) {
+      const copy = new ChessEngine();
+      copy.board = source.board.map(row => row.map(piece => piece ? { ...piece } : null));
+      copy.turn = source.turn;
+      copy.castling = { w: { ...source.castling.w }, b: { ...source.castling.b } };
+      copy.enPassant = source.enPassant ? { ...source.enPassant } : null;
+      copy.lastMove = source.lastMove ? { from: { ...source.lastMove.from }, to: { ...source.lastMove.to } } : null;
+      copy.status = source.status;
+      copy.winner = source.winner;
+      return copy;
+    }
+
+    function evaluatePosition(position) {
+      if (position.status === 'checkmate') return position.winner === 'w' ? 100000 : -100000;
+      if (position.status === 'stalemate') return 0;
+      let score = 0;
+      position.board.forEach((row, rowIndex) => row.forEach(piece => {
+        if (!piece) return;
+        const advancement = piece.type === 'p' ? (piece.color === 'w' ? 6 - rowIndex : rowIndex - 1) * 3 : 0;
+        score += (pieceValues[piece.type] + advancement) * (piece.color === 'w' ? 1 : -1);
+      }));
+      return score;
+    }
+
+    function chooseComputerMove() {
+      let bestScore = Infinity;
+      let choices = [];
+      for (const move of engine.getAllLegalMoves()) {
+        const next = cloneEngine(engine);
+        next.move(move.from, move.to, move.promotion ? 'q' : undefined);
+        let score = evaluatePosition(next);
+        if (next.status === 'active') {
+          const replies = next.getAllLegalMoves();
+          score = Math.max(...replies.map(reply => {
+            const afterReply = cloneEngine(next);
+            afterReply.move(reply.from, reply.to, reply.promotion ? 'q' : undefined);
+            return evaluatePosition(afterReply);
+          }));
+        }
+        score += Math.random() * 8;
+        if (score < bestScore) {
+          bestScore = score;
+          choices = [move];
+        } else if (score === bestScore) choices.push(move);
+      }
+      return choices[Math.floor(Math.random() * choices.length)];
+    }
+
+    function scheduleComputerMove() {
+      clearTimeout(aiTimer);
+      document.getElementById('chess-status').textContent = 'Computer is thinking…';
+      aiTimer = setTimeout(() => {
+        if (engine.status !== 'active' || mode() !== 'computer' || engine.turn !== 'b') return;
+        const move = chooseComputerMove();
+        if (move) completeMove(move, move.promotion ? 'q' : undefined);
+      }, 260);
+    }
+
+    function finish() {
+      clearTimeout(aiTimer);
+      playTimer.stop();
+      const result = engine.status === 'stalemate' ? 'draw' : engine.winner === 'w' ? 'win' : 'loss';
+      Storage.recordResult('chess', result);
+      updateStatsUI();
       if (engine.status === 'checkmate') {
-        const winner = engine.winner === 'w' ? 'White' : 'Black';
+        const winner = engine.winner === 'w' ? 'Player 1' : mode() === 'computer' ? 'Computer' : 'Player 2';
         GameUI.showGameOver({ title: 'Checkmate', message: `${winner} wins.`, restartLabel: 'New Game', onRestart: initialise });
-      } else if (engine.status === 'stalemate') {
+      } else {
         GameUI.showGameOver({ title: 'Stalemate', message: 'No legal moves remain. The game is a draw.', restartLabel: 'New Game', onRestart: initialise });
       }
     }
@@ -391,7 +469,7 @@ if (typeof document !== 'undefined') {
     function statusText() {
       if (engine.status === 'checkmate') return `Checkmate. ${engine.winner === 'w' ? 'White' : 'Black'} wins.`;
       if (engine.status === 'stalemate') return 'Stalemate. The game is a draw.';
-      const player = engine.turn === 'w' ? 'White' : 'Black';
+      const player = engine.turn === 'w' ? 'Player 1 (White)' : mode() === 'computer' ? 'Computer (Black)' : 'Player 2 (Black)';
       return engine.isInCheck(engine.turn) ? `${player} is in check.` : `${player} to move.`;
     }
 
@@ -416,6 +494,7 @@ if (typeof document !== 'undefined') {
           square.dataset.col = col;
           square.setAttribute('role', 'gridcell');
           square.setAttribute('aria-selected', sameSquare(selected, position) ? 'true' : 'false');
+          square.disabled = mode() === 'computer' && engine.turn === 'b';
           square.setAttribute('aria-label', `${ChessEngine.positionToSquare(position)}${piece ? `, ${piece.color === 'w' ? 'white' : 'black'} ${pieceNames[piece.type]}` : ', empty'}`);
           if (sameSquare(selected, position)) square.classList.add('selected');
           if (move) square.classList.add(engine.board[row][col] || move.enPassant ? 'legal-capture' : 'legal-move');
@@ -447,9 +526,19 @@ if (typeof document !== 'undefined') {
           board.appendChild(square);
         }
       }
-      document.getElementById('turn-indicator').textContent = engine.turn === 'w' ? 'White' : 'Black';
+      document.getElementById('turn-indicator').textContent = engine.turn === 'w' ? 'Player 1 (White)' : mode() === 'computer' ? 'Computer (Black)' : 'Player 2 (Black)';
       document.getElementById('chess-status').textContent = statusText();
+      updateStatsUI();
       if (focused) board.querySelector(`[data-row="${focused.row}"][data-col="${focused.col}"]`)?.focus();
+    }
+
+    function updateStatsUI() {
+      const stats = Storage.getStats('chess');
+      document.getElementById('games-played').textContent = stats.gamesPlayed;
+      document.getElementById('wins').textContent = stats.wins;
+      document.getElementById('losses').textContent = stats.losses;
+      document.getElementById('draws').textContent = stats.draws;
+      document.getElementById('time-played').textContent = `${Math.floor(stats.timePlayed / 60)}m ${stats.timePlayed % 60}s`;
     }
 
     function handleBoardKey(event) {
@@ -464,6 +553,8 @@ if (typeof document !== 'undefined') {
     function setup() {
       document.getElementById('backToHub').href = '/';
       document.querySelectorAll('.restart-btn').forEach(button => button.addEventListener('click', initialise));
+      document.getElementById('mode-select').addEventListener('change', initialise);
+      window.addEventListener('pagehide', () => playTimer.stop());
       initialise();
     }
 

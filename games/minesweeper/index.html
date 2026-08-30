@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Clear a Minesweeper field solo or compete in a local two-player duel." />
+  <meta name="description" content="Clear beginner, intermediate, or expert Minesweeper fields and chase your best time." />
   <link rel="canonical" href="https://alttabtavern.com/games/minesweeper/" />
   <meta property="og:title" content="Minesweeper | Alt Tab Tavern" />
-  <meta property="og:description" content="Clear a Minesweeper field solo or compete in a local two-player duel." />
+  <meta property="og:description" content="Clear beginner, intermediate, or expert Minesweeper fields and chase your best time." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://alttabtavern.com/games/minesweeper/" />
   <meta name="theme-color" content="#171512" />
@@ -23,21 +23,23 @@
     <div class="game-header">
       <div class="game-controls">
         <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
-        <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="single">Single Player</option><option value="duel">Two Players</option></select></label>
+        <button type="button" class="btn-secondary game-btn" id="flag-mode" aria-pressed="false">Flag mode: Off</button>
+        <div class="control-group"><span>Mode</span><strong>Single Player</strong></div>
         <label class="control-group" for="difficulty-select">Difficulty <select id="difficulty-select" class="mode-select"><option value="beginner">Beginner (9 × 9)</option><option value="intermediate">Intermediate (16 × 16)</option><option value="expert">Expert (30 × 16)</option></select></label>
       </div>
       <div class="game-info-bar">
         <div class="stat-box"><span class="label">Time</span><span class="value" id="timer">0:00</span></div>
         <div class="stat-box"><span class="label">Mines</span><span class="value" id="mine-count">10</span></div>
-        <div class="stat-box"><span class="label">Player 1</span><span class="value" id="player-one-score">-</span></div>
-        <div class="stat-box"><span class="label">Player 2</span><span class="value" id="player-two-score">-</span></div>
         <div class="stat-box"><span class="label">Flags left</span><span class="value" id="flags-left">10</span></div>
         <div class="stat-box"><span class="label">Best time</span><span class="value" id="best-time">--:--</span></div>
+        <div class="stat-box"><span class="label">Games Played</span><span class="value" id="games-played">0</span></div>
+        <div class="stat-box"><span class="label">Wins</span><span class="value" id="wins">0</span></div>
+        <div class="stat-box"><span class="label">Time Played</span><span class="value" id="time-played">0m 0s</span></div>
       </div>
     </div>
     <div id="game-board" aria-label="Minesweeper grid"></div>
     <p id="mine-status" class="board-labels" aria-live="polite"></p>
-    <p class="board-labels">Two Players: alternate valid reveals. Each newly revealed safe cell is +1; a mine is −3 and passes the turn. Flags are disabled.</p>
+    <p class="board-labels">Reveal every safe cell. Right-click to flag on desktop, or use Flag mode on touch devices.</p>
   </main>
   <script src="/js/storage.js"></script>
   <script src="/js/game-ui.js"></script>

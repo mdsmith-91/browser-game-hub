@@ -22,12 +22,15 @@
     <h1 class="game-title">Pong</h1>
     <div class="game-header"><div class="game-controls">
       <button type="button" class="btn-secondary game-btn restart-btn">↻ New Match</button>
-      <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="single">Versus Computer</option><option value="local">Two Players</option></select></label>
+      <label class="control-group" for="mode-select">Mode <select id="mode-select" class="mode-select"><option value="single">Versus AI</option><option value="local">Two Players</option></select></label>
       <label class="control-group" id="difficulty-control" for="difficulty-select">Difficulty <select id="difficulty-select"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select></label>
     </div><div class="game-info-bar pong-stats">
       <div class="stat-box"><div class="label">Player 1</div><div class="value" id="player-one-score">0</div></div>
       <div class="stat-box"><div class="label">Player 2 / CPU</div><div class="value" id="player-two-score">0</div></div>
-      <div class="stat-box"><div class="label">Best Difference</div><div class="value" id="best-difference">0</div></div>
+      <div class="stat-box"><div class="label">Games Played</div><div class="value" id="games-played">0</div></div>
+      <div class="stat-box"><div class="label">Wins</div><div class="value" id="wins">0</div></div>
+      <div class="stat-box"><div class="label">Losses</div><div class="value" id="losses">0</div></div>
+      <div class="stat-box"><div class="label">Time Played</div><div class="value" id="time-played">0m 0s</div></div>
     </div></div>
     <p id="pong-status" class="pong-status" aria-live="polite">First to 5 wins.</p>
     <div class="pong-canvas-wrap"><canvas id="pong-board" role="img" aria-label="Pong playing field"></canvas></div>

@@ -6,12 +6,21 @@ const CheckersGame = (() => {
   let mustContinueFrom;
   let captures;
   let gameActive;
+  let quietMoves;
+  let aiTimer = null;
+  const playTimer = Storage.createPlayTimer('checkers');
+
+  function mode() {
+    return document.getElementById('mode-select').value;
+  }
 
   const directionsFor = piece => piece.king
     ? [[-1, -1], [-1, 1], [1, -1], [1, 1]]
     : piece.color === 'red' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
 
   function initialise() {
+    clearTimeout(aiTimer);
+    playTimer.reset();
     GameUI.clearGameOver();
     board = Array.from({ length: 8 }, () => Array(8).fill(null));
     for (let row = 0; row < 3; row++) {
@@ -25,6 +34,7 @@ const CheckersGame = (() => {
     legalMoves = [];
     mustContinueFrom = null;
     captures = { red: 0, white: 0 };
+    quietMoves = 0;
     gameActive = true;
     render();
     updateUI();
@@ -57,7 +67,7 @@ const CheckersGame = (() => {
   }
 
   function handleCell(row, col) {
-    if (!gameActive) return;
+    if (!gameActive || (mode() === 'computer' && currentPlayer === 'white')) return;
     if (selectedPiece?.row === row && selectedPiece.col === col && !mustContinueFrom) {
       selectedPiece = null;
       legalMoves = [];
@@ -80,6 +90,7 @@ const CheckersGame = (() => {
   }
 
   function executeMove(move) {
+    playTimer.start();
     const piece = board[selectedPiece.row][selectedPiece.col];
     board[selectedPiece.row][selectedPiece.col] = null;
     board[move.row][move.col] = piece;
@@ -89,6 +100,7 @@ const CheckersGame = (() => {
     }
     const promoted = !piece.king && ((piece.color === 'red' && move.row === 0) || (piece.color === 'white' && move.row === 7));
     if (promoted) piece.king = true;
+    quietMoves = move.capture || promoted ? 0 : quietMoves + 1;
 
     // In American checkers, crowning ends a capture sequence.
     const followUps = move.capture && !promoted ? movesFor(move.row, move.col, true) : [];
@@ -98,6 +110,11 @@ const CheckersGame = (() => {
       legalMoves = followUps;
       render();
       updateUI();
+      if (mode() === 'computer' && currentPlayer === 'white') scheduleComputerMove();
+      return;
+    }
+    if (quietMoves >= 80) {
+      finish(null);
       return;
     }
     endTurn();
@@ -114,6 +131,53 @@ const CheckersGame = (() => {
     }
     render();
     updateUI();
+    if (mode() === 'computer' && currentPlayer === 'white') scheduleComputerMove();
+  }
+
+  function allMoves(color) {
+    const capturesRequired = playerHasCapture(color);
+    const moves = [];
+    board.forEach((row, rowIndex) => row.forEach((piece, colIndex) => {
+      if (piece?.color !== color) return;
+      movesFor(rowIndex, colIndex, capturesRequired).forEach(move => moves.push({ from: { row: rowIndex, col: colIndex }, move }));
+    }));
+    return moves;
+  }
+
+  function chooseComputerMove() {
+    const choices = mustContinueFrom
+      ? movesFor(mustContinueFrom.row, mustContinueFrom.col, true).map(move => ({ from: { ...mustContinueFrom }, move }))
+      : allMoves('white');
+    let bestScore = -Infinity;
+    let best = [];
+    choices.forEach(choice => {
+      const piece = board[choice.from.row][choice.from.col];
+      const captured = choice.move.capture ? board[choice.move.capture.row][choice.move.capture.col] : null;
+      const promotes = !piece.king && choice.move.row === 7;
+      const centre = 4 - Math.abs(3.5 - choice.move.col);
+      const safety = choice.move.row === 0 || choice.move.row === 7 ? 3 : 0;
+      const score = (captured ? (captured.king ? 140 : 100) : 0) + (promotes ? 65 : 0) + centre + safety + Math.random() * 2;
+      if (score > bestScore) {
+        bestScore = score;
+        best = [choice];
+      } else if (score === bestScore) best.push(choice);
+    });
+    return best[Math.floor(Math.random() * best.length)];
+  }
+
+  function scheduleComputerMove() {
+    clearTimeout(aiTimer);
+    aiTimer = setTimeout(() => {
+      if (!gameActive || mode() !== 'computer' || currentPlayer !== 'white') return;
+      const choice = chooseComputerMove();
+      if (!choice) {
+        finish('red');
+        return;
+      }
+      selectedPiece = choice.from;
+      legalMoves = [choice.move];
+      executeMove(choice.move);
+    }, 320);
   }
 
   function hasPieces(color) {
@@ -149,24 +213,29 @@ const CheckersGame = (() => {
 
   function updateUI() {
     const count = color => board.flat().filter(piece => piece?.color === color).length;
-    document.getElementById('turn-indicator').textContent = currentPlayer === 'red' ? 'Red' : 'White';
+    document.getElementById('turn-indicator').textContent = currentPlayer === 'red' ? 'Player 1 (Red)' : mode() === 'computer' ? 'Computer (White)' : 'Player 2 (White)';
     document.getElementById('red-captures').textContent = captures.red;
     document.getElementById('white-captures').textContent = captures.white;
     document.getElementById('red-pieces').textContent = count('red');
     document.getElementById('white-pieces').textContent = count('white');
     const stats = Storage.getStats('checkers');
-    document.getElementById('red-wins').textContent = stats.player1Wins;
-    document.getElementById('white-wins').textContent = stats.player2Wins;
+    document.getElementById('games-played').textContent = stats.gamesPlayed;
+    document.getElementById('wins').textContent = stats.wins;
+    document.getElementById('losses').textContent = stats.losses;
+    document.getElementById('draws').textContent = stats.draws;
+    document.getElementById('time-played').textContent = `${Math.floor(stats.timePlayed / 60)}m ${stats.timePlayed % 60}s`;
   }
 
   function finish(winner) {
     gameActive = false;
-    Storage.updateMultiplayerStats('checkers', winner === 'red' ? 'player1' : 'player2');
+    clearTimeout(aiTimer);
+    playTimer.stop();
+    Storage.recordResult('checkers', winner === null ? 'draw' : winner === 'red' ? 'win' : 'loss');
     render();
     updateUI();
     GameUI.showGameOver({
-      title: `${winner === 'red' ? 'Red' : 'White'} wins!`,
-      message: 'No legal moves remain for the opponent.',
+      title: winner === null ? 'Draw' : winner === 'red' ? 'Player 1 wins!' : `${mode() === 'computer' ? 'Computer' : 'Player 2'} wins!`,
+      message: winner === null ? 'No capture or promotion occurred in 40 moves per player.' : 'No legal moves remain for the opponent.',
       onRestart: initialise
     });
   }
@@ -174,6 +243,8 @@ const CheckersGame = (() => {
   function setup() {
     document.getElementById('backToHub').href = '/';
     document.querySelectorAll('.restart-btn').forEach(button => button.addEventListener('click', initialise));
+    document.getElementById('mode-select').addEventListener('change', initialise);
+    window.addEventListener('pagehide', () => playTimer.stop());
     initialise();
   }
 

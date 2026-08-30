@@ -9,7 +9,7 @@ function renderHub() {
     const card = document.createElement('article');
     const record = game.record ? getRecord(game) : null;
     const modeBadges = game.gameModes.map(mode => {
-      const label = mode === 'Single Player' ? 'Solo' : mode === 'Two Players' ? '2 Players' : 'Versus AI';
+      const label = mode === 'Single Player' ? '1 Player' : mode === 'Two Players' ? '2 Players' : 'AI';
       return `<span class="mode-badge${mode === 'Versus Computer' ? ' ai' : ''}">${label}</span>`;
     }).join('');
     card.className = `game-card game-${game.id}`;
@@ -17,6 +17,7 @@ function renderHub() {
       <div class="card-content">
         <h3>${game.title}</h3>
         <p>${game.description}</p>
+        <p class="tracked-stats"><span>Tracks:</span> ${game.stats.join(' · ')}</p>
         <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
       </div>
       <div class="card-meta${record ? '' : ' recordless'}">

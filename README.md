@@ -23,6 +23,7 @@ Run the dependency-free checks from the repository root:
 ```powershell
 node tests/storage.test.js
 node tests/static.test.js
+node tests/game-modes.test.js
 node tests/chess.test.js
 ```
 
@@ -30,11 +31,11 @@ Then serve the site and manually check the homepage, every registry route, each 
 
 ## Modes
 
-Chess, Tic-Tac-Toe, Checkers, and Connect Four are local two-player games. Pong supports Versus Computer and Two Players (Player 1: W/S; Player 2: arrow keys). Battleship supports Versus Computer and a private two-player hot-seat mode. Snake and Minesweeper each offer Single Player and Two Players.
+Chess, Tic-Tac-Toe, Checkers, and Connect Four support both a local two-player game and a responsive casual AI opponent. Pong supports Versus AI and Two Players (Player 1: W/S; Player 2: arrow keys). Battleship supports Versus AI and a private two-player hot-seat mode. Snake offers Single Player and genuine simultaneous Two Players; Minesweeper is Single Player only.
 
 Snake two-player mode is simultaneous and keyboard-first: Player 1 uses W/A/S/D and Player 2 uses arrow keys. A wall, body, or head-to-head collision loses the round; simultaneous crashes are a draw.
 
-Minesweeper Duel uses a shared beginner board. Players alternate valid reveals: every newly revealed safe cell is +1, a mine is -3 and passes the turn, and flags are disabled. The highest score after all safe cells are found wins.
+Minesweeper offers beginner, intermediate, and expert solo boards with first-click safety, touch flag mode, best-time tracking, and standard win/loss completion.
 
 Chess implements complete local play, including check, checkmate, stalemate, castling, en passant, and promotion choices.
 
@@ -57,7 +58,7 @@ The hub is rendered from `js/game-registry.js`; the registry declares each game'
 
 ## Design system
 
-Statistics are normalized on every read, keeping solo results (`gamesPlayed`, `wins`, `losses`) separate from local multiplayer results (`multiplayerMatches`, `player1Wins`, `player2Wins`, `draws`). Registry `record` metadata declares whether a homepage card uses a high score, lowest time, or statistics field.
+Statistics are normalized on every read into `gamesPlayed`, `wins`, `losses`, `draws`, and cumulative active `timePlayed`. Completed competitive results are recorded from Player 1's perspective in both AI and local modes. A one-time migration folds compatible legacy local counters into the unified totals, while obsolete Battleship/Pong record keys and the retired Minesweeper duel counters are discarded. Registry metadata declares every supported mode, tracked metric, and homepage record.
 
 Alt Tab Tavern uses a dependency-free, CSS-first visual system. Shared palette tokens and homepage components live in `css/main.css`; shared game-page controls and panels live in `css/games.css`. Keep public branding as **Alt Tab Tavern**, use the warm `--accent` palette for primary actions, and reuse the shared button, status, and control-group classes on game pages.
 
