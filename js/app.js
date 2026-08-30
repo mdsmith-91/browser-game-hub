@@ -17,7 +17,6 @@ function renderHub() {
       <div class="card-content">
         <h3>${game.title}</h3>
         <p>${game.description}</p>
-        <p class="tracked-stats"><span>Tracks:</span> ${game.stats.join(' · ')}</p>
         <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
       </div>
       <div class="card-meta${record ? '' : ' recordless'}">
