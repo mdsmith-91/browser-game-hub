@@ -3,7 +3,7 @@ const SnakeGame = (() => {
   const ctx = canvas.getContext('2d');
   const TILE = 20;
   const playTimer = Storage.createPlayTimer('snake');
-  let width, height, snake, food, timer, active, score, level, speed;
+  let width, height, snake, food, timer, active, score, level, speed, pausedForVisibility;
 
   function initialise() {
     clearInterval(timer);
@@ -16,7 +16,7 @@ const SnakeGame = (() => {
     height = canvas.height / TILE;
     const mid = Math.floor(height / 2);
     snake = { color: '#48bb78', body: [{ x: 6, y: mid }, { x: 5, y: mid }, { x: 4, y: mid }], dx: 1, dy: 0, nextDx: 1, nextDy: 0 };
-    score = 0; level = 1; speed = 150; active = true;
+    score = 0; level = 1; speed = 150; active = true; pausedForVisibility = false;
     spawnFood(); updateUI(); draw(); timer = setInterval(tick, speed);
     playTimer.start();
   }
@@ -132,7 +132,19 @@ const SnakeGame = (() => {
     document.removeEventListener('keydown', keydown);
   }
 
+  function visibilityChange() {
+    if (!active) return;
+    if (document.visibilityState === 'hidden') {
+      clearInterval(timer);
+      pausedForVisibility = true;
+    } else if (pausedForVisibility) {
+      pausedForVisibility = false;
+      timer = setInterval(tick, speed);
+    }
+  }
+
   window.addEventListener('pagehide', cleanup);
+  document.addEventListener('visibilitychange', visibilityChange);
   window.addEventListener('pageshow', event => {
     if (event.persisted) {
       document.addEventListener('keydown', keydown);

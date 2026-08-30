@@ -7,8 +7,11 @@ const Physics2D = (() => {
   }
   function collideCircles(a, b, restitution = .92) {
     const dx = b.x - a.x; const dy = b.y - a.y; const radius = a.r + b.r; const distance = Math.hypot(dx, dy);
-    if (!distance || distance >= radius) return false;
-    const nx = dx / distance; const ny = dy / distance; const overlap = radius - distance;
+    if (distance >= radius) return false;
+    const relativeSpeed = Math.hypot(b.vx - a.vx, b.vy - a.vy);
+    const nx = distance ? dx / distance : relativeSpeed ? (a.vx - b.vx) / relativeSpeed : 1;
+    const ny = distance ? dy / distance : relativeSpeed ? (a.vy - b.vy) / relativeSpeed : 0;
+    const overlap = radius - distance;
     a.x -= nx * overlap / 2; a.y -= ny * overlap / 2; b.x += nx * overlap / 2; b.y += ny * overlap / 2;
     const relative = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
     if (relative < 0) { const impulse = -(1 + restitution) * relative / 2; a.vx -= impulse * nx; a.vy -= impulse * ny; b.vx += impulse * nx; b.vy += impulse * ny; }

@@ -51,7 +51,11 @@ const Minesweeper = (() => {
       plantMines(row, col);
       firstClick = false;
       playTimer.start();
-      timerId = setInterval(() => { seconds++; updateUI(); }, 1000);
+      timerId = setInterval(() => {
+        if (document.visibilityState === 'hidden') return;
+        seconds++;
+        updateUI();
+      }, 1000);
     }
     if (first.mine) {
       finish(false);
@@ -105,11 +109,12 @@ const Minesweeper = (() => {
 
   function updateUI(message) {
     const stats = Storage.getStats('minesweeper');
-    const best = Storage.getBestScore('minesweeper');
+    const best = Storage.getBestScore(`minesweeper-${difficulty}`);
     document.getElementById('timer').textContent = format(seconds);
     document.getElementById('mine-count').textContent = mines;
     document.getElementById('flags-left').textContent = mines - flags;
     document.getElementById('best-time').textContent = best === null ? '--:--' : format(best);
+    document.getElementById('best-time-label').textContent = `Best time (${difficulty})`;
     document.getElementById('games-played').textContent = stats.gamesPlayed;
     document.getElementById('wins').textContent = stats.wins;
     document.getElementById('time-played').textContent = `${Math.floor(stats.timePlayed / 60)}m ${stats.timePlayed % 60}s`;
@@ -124,7 +129,10 @@ const Minesweeper = (() => {
     active = false;
     clearInterval(timerId);
     playTimer.stop();
-    if (won) Storage.saveBestScore('minesweeper', seconds);
+    if (won) {
+      Storage.saveBestScore(`minesweeper-${difficulty}`, seconds);
+      Storage.saveBestScore('minesweeper', seconds);
+    }
     Storage.recordResult('minesweeper', won ? 'win' : 'complete');
     if (!won) board.flat().filter(cell => cell.mine).forEach(cell => { cell.revealed = true; });
     render();
@@ -141,6 +149,7 @@ const Minesweeper = (() => {
     document.querySelectorAll('.restart-btn').forEach(button => button.onclick = () => initialise(difficulty));
     document.getElementById('difficulty-select').onchange = event => initialise(event.target.value);
     window.addEventListener('pagehide', () => { clearInterval(timerId); playTimer.stop(); });
+    window.addEventListener('pageshow', event => { if (event.persisted) initialise(difficulty); });
     initialise();
   }
 

@@ -14,6 +14,7 @@ const CrazyEights = (() => {
     document.getElementById('games-played').textContent = stats.gamesPlayed;
     document.getElementById('wins').textContent = stats.wins;
     document.getElementById('losses').textContent = stats.losses;
+    document.getElementById('draws').textContent = stats.draws;
     document.getElementById('win-rate').textContent = `${stats.gamesPlayed ? Math.round(stats.wins / stats.gamesPlayed * 100) : 0}%`;
     document.getElementById('best-streak').textContent = stats.bestWinStreak;
     document.getElementById('time-played').textContent = formatTime(stats.timePlayed);
@@ -70,9 +71,17 @@ const CrazyEights = (() => {
   function finish() {
     if (recorded || state.phase !== 'complete') return;
     recorded = true; timer.stop(); clearTimeout(aiTimer);
-    const won = state.winner === 'human';
-    Storage.recordGameResult(gameId, won ? 'win' : 'loss'); updateStats(); render();
-    GameUI.showGameOver({ title: won ? 'You emptied your hand!' : 'Computer wins', message: won ? 'A sharp round of Crazy Eights.' : 'The computer played its last card first.', restartLabel: 'Rematch', onRestart: newGame });
+    const result = state.winner === 'draw' ? 'draw' : state.winner === 'human' ? 'win' : 'loss';
+    const emptiedHand = !state.hands.human.length || !state.hands.computer.length;
+    Storage.recordGameResult(gameId, result); updateStats(); render();
+    GameUI.showGameOver({
+      title: result === 'draw' ? 'Stalemate draw' : result === 'win' ? 'You win!' : 'Computer wins',
+      message: emptiedHand
+        ? (result === 'win' ? 'You emptied your hand first.' : 'The computer emptied its hand first.')
+        : `No cards remain to draw. You ${state.hands.human.length} · Computer ${state.hands.computer.length}.`,
+      restartLabel: 'Rematch',
+      onRestart: newGame
+    });
   }
   function scheduleAI() {
     if (state.phase !== 'playing' || state.turn !== 'computer') return;
@@ -102,7 +111,8 @@ const CrazyEights = (() => {
       button.textContent = `${PlayingCards.suitSymbols[suit]} ${suit}`; button.onclick = () => perform({ type: 'play', cardId: selectedEight, suit }); actions.appendChild(button);
     });
     document.querySelectorAll('.restart-btn').forEach(button => { button.onclick = newGame; });
-    window.addEventListener('pagehide', () => { clearTimeout(aiTimer); timer.destroy(); }); newGame();
+    window.addEventListener('pagehide', event => { clearTimeout(aiTimer); timer.stop(); if (!event.persisted) timer.destroy(); });
+    window.addEventListener('pageshow', event => { if (event.persisted) newGame(); }); newGame();
   }
   window.initGame = newGame; window.restartGame = newGame;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup, { once: true }); else setup();

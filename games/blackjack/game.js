@@ -60,7 +60,8 @@ const Blackjack = (() => {
     document.getElementById('hit-button').onclick = () => act('hit');
     document.getElementById('stand-button').onclick = () => act('stand');
     document.querySelectorAll('.restart-btn').forEach(button => { button.onclick = newGame; });
-    window.addEventListener('pagehide', () => timer.destroy());
+    window.addEventListener('pagehide', event => { timer.stop(); if (!event.persisted) timer.destroy(); });
+    window.addEventListener('pageshow', event => { if (event.persisted) newGame(); });
     newGame();
   }
   window.initGame = newGame;

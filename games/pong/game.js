@@ -18,6 +18,7 @@ const PongGame = (() => {
   function newMatch() {
     cancelAnimationFrame(animationId);
     playTimer.reset();
+    GameUI.clearGameOver();
     pressed.clear();
     scores = { left: 0, right: 0 };
     left = { y: (HEIGHT - paddle.height) / 2 };
@@ -99,7 +100,9 @@ const PongGame = (() => {
     playTimer.stop();
     const playerWon = winner === 'left';
     Storage.recordResult('pong', playerWon ? 'win' : 'loss');
-    updateUI(playerWon ? 'Player 1 wins the match!' : mode() === 'single' ? 'The computer wins the match.' : 'Player 2 wins the match.');
+    const winnerName = playerWon ? 'Player 1' : mode() === 'single' ? 'Computer' : 'Player 2';
+    updateUI(`${winnerName} wins the match!`);
+    GameUI.showGameOver({ title: `${winnerName} wins!`, message: `Final score ${scores.left}–${scores.right}.`, onRestart: newMatch });
   }
 
   function draw() {

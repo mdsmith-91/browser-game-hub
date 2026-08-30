@@ -90,7 +90,8 @@ const GoFish = (() => {
   }
   function setup() {
     document.querySelectorAll('.restart-btn').forEach(button => { button.onclick = newGame; });
-    window.addEventListener('pagehide', () => { clearTimeout(aiTimer); timer.destroy(); }); newGame();
+    window.addEventListener('pagehide', event => { clearTimeout(aiTimer); timer.stop(); if (!event.persisted) timer.destroy(); });
+    window.addEventListener('pageshow', event => { if (event.persisted) newGame(); }); newGame();
   }
   window.initGame = newGame; window.restartGame = newGame;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup, { once: true }); else setup();

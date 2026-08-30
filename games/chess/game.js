@@ -554,7 +554,8 @@ if (typeof document !== 'undefined') {
       document.getElementById('backToHub').href = '/';
       document.querySelectorAll('.restart-btn').forEach(button => button.addEventListener('click', initialise));
       document.getElementById('mode-select').addEventListener('change', initialise);
-      window.addEventListener('pagehide', () => playTimer.stop());
+      window.addEventListener('pagehide', () => { clearTimeout(aiTimer); playTimer.stop(); });
+      window.addEventListener('pageshow', event => { if (event.persisted) initialise(); });
       initialise();
     }
 

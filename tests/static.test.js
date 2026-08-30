@@ -33,7 +33,7 @@ const expectedModes = {
 };
 const modePageLabels = { 'Single Player': 'Single Player', 'Two Players': 'Two Players', 'Versus Computer': 'Versus AI' };
 
-assert(games.length > 0, 'The game registry must not be empty.');
+assert.strictEqual(games.length, 20, 'The live catalog must contain exactly the intended 20 games.');
 assert.strictEqual(new Set(games.map(game => game.id)).size, games.length, 'Game IDs must be unique.');
 assert.deepStrictEqual(
   Array.from(games, game => game.title),
@@ -90,6 +90,8 @@ for (const game of games) {
   assert(/<h1 class="game-title">/.test(html), `${game.id} needs a top-level heading.`);
   assert(/<a href="\/" id="backToHub" class="back-btn">Back to Tavern<\/a>/.test(html), `${game.id} needs consistent Tavern navigation.`);
   assert(html.includes('/js/storage.js'), `${game.id} must load shared stat persistence.`);
+  assert(html.includes('/js/game-ui.js'), `${game.id} must load the shared game-over dialog.`);
+  assert(html.includes('aria-live='), `${game.id} needs a live status announcement region.`);
   for (const mode of game.gameModes) assert(html.includes(modePageLabels[mode]), `${game.id} does not expose its ${mode} mode on the page.`);
   for (const mode of allowedModes) {
     if (!game.gameModes.includes(mode)) assert(!html.includes(modePageLabels[mode]), `${game.id} advertises unsupported ${mode} play.`);

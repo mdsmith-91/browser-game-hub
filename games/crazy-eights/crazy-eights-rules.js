@@ -43,6 +43,13 @@ const CrazyEightsRules = (() => {
     state.hasDrawn = false;
   }
 
+  function finishBlockedGame(state) {
+    const humanCards = state.hands.human.length;
+    const computerCards = state.hands.computer.length;
+    state.phase = 'complete';
+    state.winner = humanCards === computerCards ? 'draw' : humanCards < computerCards ? 'human' : 'computer';
+  }
+
   function applyAction(state, action) {
     const legal = legalActions(state);
     const match = legal.find(candidate => candidate.type === action?.type &&
@@ -52,7 +59,14 @@ const CrazyEightsRules = (() => {
     if (action.type === 'draw') {
       state.hasDrawn = true;
       const card = drawOne(state, state.turn);
-      if (!card || !isPlayable(card, state)) finishTurn(state);
+      if (!card) {
+        state.blockedTurns = (state.blockedTurns || 0) + 1;
+        if (state.blockedTurns >= 2) finishBlockedGame(state);
+        else finishTurn(state);
+        return true;
+      }
+      state.blockedTurns = 0;
+      if (!isPlayable(card, state)) finishTurn(state);
       return true;
     }
     if (action.type === 'pass') {
@@ -64,6 +78,7 @@ const CrazyEightsRules = (() => {
     const [card] = hand.splice(index, 1);
     state.discardPile.push(card);
     state.activeSuit = card.rank === '8' ? action.suit : card.suit;
+    state.blockedTurns = 0;
     if (!hand.length) {
       state.phase = 'complete';
       state.winner = state.turn;
@@ -97,6 +112,7 @@ const CrazyEightsRules = (() => {
       activeSuit: first.suit,
       turn: 'human',
       hasDrawn: false,
+      blockedTurns: 0,
       phase: 'playing',
       winner: null
     };

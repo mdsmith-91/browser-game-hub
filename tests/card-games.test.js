@@ -58,6 +58,9 @@ eights = { ...eightsState(), drawPile: [], discardPile: [card('hearts', '5')], h
 assert.deepStrictEqual(JSON.parse(JSON.stringify(CrazyEightsRules.legalActions(eights))), [{ type: 'draw' }], 'An exhausted pile should still allow the no-card draw/pass action.');
 CrazyEightsRules.applyAction(eights, { type: 'draw' });
 assert.strictEqual(eights.turn, 'computer');
+CrazyEightsRules.applyAction(eights, { type: 'draw' });
+assert.strictEqual(eights.phase, 'complete', 'Two blocked turns with no draw cards must end the game.');
+assert.strictEqual(eights.winner, 'draw', 'Equal hands at an exhausted-deck stalemate should draw.');
 eights = eightsState(); eights.turn = 'computer'; eights.hands.computer = [card('hearts', 'queen'), card('clubs', '8'), card('spades', '3')];
 const aiEightAction = CrazyEightsAI.chooseAction(eights);
 assert(CrazyEightsRules.legalActions(eights).some(action => JSON.stringify(action) === JSON.stringify(aiEightAction)), 'Crazy Eights AI must choose through legal actions.');
