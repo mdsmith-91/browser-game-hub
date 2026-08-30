@@ -12,7 +12,7 @@ Each game is self-contained under `games/<game-id>/` with `index.html`,
 `chess`, `connect-four`, `checkers`, `tic-tac-toe`, `pong`, and `battleship`. Keep game-specific
 DOM, styling, and logic inside that directory.
 
-Game metadata in `js/game-registry.js` declares supported modes. Use the
+Game metadata in `js/game-registry.js` declares supported modes and category membership. Category labels, descriptions, and order live in `GameCategories`; do not duplicate category membership or game lists in homepage markup or code. The homepage hides categories without implemented games and alphabetizes games within every category. Use the
 consistent labels `Single Player`, `Two Players`, and `Versus Computer` and
 reset all round state when the selector changes. Multiplayer status must name
 the current player in text, use an `aria-live` status region for turn/end

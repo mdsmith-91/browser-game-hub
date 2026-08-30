@@ -1,31 +1,69 @@
 document.addEventListener('DOMContentLoaded', renderHub);
 
 function renderHub() {
-  const gamesContainer = document.querySelector('.game-grid');
-  if (!gamesContainer) return;
+  const categoriesContainer = document.querySelector('.game-categories');
+  const categoryNav = document.querySelector('.category-nav');
+  if (!categoriesContainer) return;
 
-  gamesContainer.innerHTML = '';
-  GameRegistry.forEach(game => {
-    const card = document.createElement('article');
-    const record = game.record ? getRecord(game) : null;
-    const tags = game.tags || game.gameModes.map(mode => mode === 'Single Player' ? '1 Player' : mode === 'Two Players' ? '2 Players' : 'AI');
-    const modeBadges = tags.map(label => {
-      return `<span class="mode-badge${label === 'AI' ? ' ai' : ''}">${label}</span>`;
-    }).join('');
-    card.className = `game-card game-${game.id}`;
-    card.innerHTML = `
-      <div class="card-content">
-        <h3>${game.title}</h3>
-        <p>${game.description}</p>
-        <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
+  categoriesContainer.innerHTML = '';
+  if (categoryNav) categoryNav.innerHTML = '';
+
+  GameCategories.forEach(category => {
+    const games = GameRegistry.filter(game => game.category === category.id);
+    if (!games.length) return;
+
+    const section = document.createElement('section');
+    section.className = 'game-category';
+    section.id = category.id;
+    section.setAttribute('aria-labelledby', `${category.id}-title`);
+    section.innerHTML = `
+      <div class="category-heading">
+        <h3 id="${category.id}-title">${category.title}</h3>
+        <p>${category.description}</p>
       </div>
-      <div class="card-meta${record ? '' : ' recordless'}">
-        ${record ? `<span class="high-score"><span>${game.record.label}</span><strong>${record.value ?? '—'}</strong></span>` : ''}
-        <a class="play-btn" href="${game.url}" aria-label="Play ${game.title}">Play Now</a>
-      </div>
+      <div class="game-grid" aria-label="${category.title}"></div>
     `;
-    gamesContainer.appendChild(card);
+
+    const grid = section.querySelector('.game-grid');
+    games.forEach(game => grid.appendChild(createGameCard(game)));
+    categoriesContainer.appendChild(section);
+
+    if (categoryNav) {
+      const link = document.createElement('a');
+      link.href = `#${category.id}`;
+      link.textContent = category.title;
+      categoryNav.appendChild(link);
+    }
   });
+}
+
+function createGameCard(game) {
+  const card = document.createElement('article');
+  const record = game.record ? getRecord(game) : null;
+  const modeBadges = getModeTags(game.gameModes).map(label => {
+    return `<span class="mode-badge${label === 'AI' ? ' ai' : ''}">${label}</span>`;
+  }).join('');
+  card.className = `game-card game-${game.id}`;
+  card.innerHTML = `
+    <div class="card-content">
+      <h4>${game.title}</h4>
+      <p>${game.description}</p>
+      <div class="mode-summary" aria-label="Available modes">${modeBadges}</div>
+    </div>
+    <div class="card-meta${record ? '' : ' recordless'}">
+      ${record ? `<span class="high-score"><span>${game.record.label}</span><strong>${record.value ?? '—'}</strong></span>` : ''}
+      <a class="play-btn" href="${game.url}" aria-label="Play ${game.title}">Play Now</a>
+    </div>
+  `;
+  return card;
+}
+
+function getModeTags(gameModes) {
+  const tags = [];
+  if (gameModes.includes('Single Player') || gameModes.includes('Versus Computer')) tags.push('1 PLAYER');
+  if (gameModes.includes('Versus Computer')) tags.push('AI');
+  if (gameModes.includes('Two Players')) tags.push('LOCAL 2P');
+  return tags;
 }
 
 function getRecord(game) {

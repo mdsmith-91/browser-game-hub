@@ -5,8 +5,9 @@ const vm = require('vm');
 
 const root = path.resolve(__dirname, '..');
 const registrySandbox = {};
-vm.runInNewContext(`${fs.readFileSync(path.join(root, 'js/game-registry.js'), 'utf8')}\nthis.registry = GameRegistry;`, registrySandbox);
+vm.runInNewContext(`${fs.readFileSync(path.join(root, 'js/game-registry.js'), 'utf8')}\nthis.registry = GameRegistry; this.categories = GameCategories;`, registrySandbox);
 const games = registrySandbox.registry;
+const categories = registrySandbox.categories;
 const allowedModes = new Set(['Single Player', 'Two Players', 'Versus Computer']);
 const expectedModes = {
   battleship: ['Two Players', 'Versus Computer'],
@@ -31,6 +32,27 @@ assert.deepStrictEqual(
   Array.from(games, game => game.title).sort((first, second) => first.localeCompare(second, undefined, { sensitivity: 'base' })),
   'The game registry must be alphabetized by title.'
 );
+assert.deepStrictEqual(
+  Array.from(categories, category => category.id),
+  ['board-games', 'card-games', 'arcade', 'puzzle', 'tavern-games'],
+  'Game categories must remain in the intended browse order.'
+);
+
+const categoryIds = new Set(categories.map(category => category.id));
+const expectedCategories = {
+  battleship: 'board-games',
+  blackjack: 'card-games',
+  checkers: 'board-games',
+  chess: 'board-games',
+  'connect-four': 'board-games',
+  'crazy-eights': 'card-games',
+  'go-fish': 'card-games',
+  minesweeper: 'puzzle',
+  pong: 'arcade',
+  snake: 'arcade',
+  solitaire: 'card-games',
+  'tic-tac-toe': 'board-games'
+};
 
 for (const game of games) {
   const gameDirectory = path.join(root, 'games', game.id);
@@ -38,6 +60,8 @@ for (const game of games) {
   const html = fs.readFileSync(htmlPath, 'utf8');
 
   assert.strictEqual(game.url, `/games/${game.id}/`, `${game.id} has an inconsistent route.`);
+  assert(categoryIds.has(game.category), `${game.id} references an undefined category.`);
+  assert.strictEqual(game.category, expectedCategories[game.id], `${game.id} belongs in the wrong category.`);
   assert(game.gameModes.length > 0 && game.gameModes.every(mode => allowedModes.has(mode)), `${game.id} has invalid mode metadata.`);
   assert.deepStrictEqual(Array.from(game.gameModes), expectedModes[game.id], `${game.id} has misleading mode metadata.`);
   assert(game.stats.length > 0 && game.stats.includes('Games Played') && game.stats.includes('Time Played'), `${game.id} needs explicit tracked-stat metadata.`);
@@ -59,10 +83,20 @@ for (const game of games) {
   }
 }
 
-assert.deepStrictEqual(Array.from(games.find(game => game.id === 'blackjack').tags), ['1 Player'], 'Blackjack should not carry an AI tag for its fixed dealer.');
-assert.deepStrictEqual(Array.from(games.find(game => game.id === 'snake').tags), ['1 Player'], 'Snake should be labeled as a one-player game.');
-assert.deepStrictEqual(Array.from(games.find(game => game.id === 'crazy-eights').tags), ['1 Player', 'AI']);
-assert.deepStrictEqual(Array.from(games.find(game => game.id === 'go-fish').tags), ['1 Player', 'AI']);
+for (const category of categories) {
+  const titles = games.filter(game => game.category === category.id).map(game => game.title);
+  assert.deepStrictEqual(
+    Array.from(titles),
+    Array.from(titles).sort((first, second) => first.localeCompare(second, undefined, { sensitivity: 'base' })),
+    `${category.title} must be alphabetized.`
+  );
+}
+
+const appSandbox = { document: { addEventListener() {} } };
+vm.runInNewContext(`${fs.readFileSync(path.join(root, 'js/app.js'), 'utf8')}\nthis.getTags = getModeTags;`, appSandbox);
+assert.deepStrictEqual(Array.from(appSandbox.getTags(['Single Player'])), ['1 PLAYER']);
+assert.deepStrictEqual(Array.from(appSandbox.getTags(['Versus Computer'])), ['1 PLAYER', 'AI']);
+assert.deepStrictEqual(Array.from(appSandbox.getTags(['Two Players', 'Versus Computer'])), ['1 PLAYER', 'AI', 'LOCAL 2P']);
 
 const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
 for (const game of games) assert(sitemap.includes(`https://alttabtavern.com${game.url}`), `${game.id} is missing from the sitemap.`);
@@ -76,6 +110,12 @@ assert.deepStrictEqual(gameDirectories, Array.from(games, game => game.id).sort(
 const homepage = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 assert(!/data-game-count|hero-art|card-icon/.test(homepage), 'The homepage must not contain count-dependent or decorative artwork markup.');
 assert(!/Play\s*<|game-night-note/.test(homepage), 'The redundant homepage CTA or filler panel is still present.');
+assert(homepage.includes('class="category-nav"') && homepage.includes('class="game-categories"'), 'The homepage needs category navigation and a generated category container.');
+assert(!/noscript-game-list|\/games\/battleship\//.test(homepage), 'The homepage must not duplicate the registry game list.');
+
+const appSource = fs.readFileSync(path.join(root, 'js/app.js'), 'utf8');
+assert(appSource.includes('if (!games.length) return;'), 'Empty categories must be omitted.');
+assert(!appSource.includes('const games = ['), 'Homepage code must not duplicate registry games.');
 
 const notFound = fs.readFileSync(path.join(root, '404.html'), 'utf8');
 assert(notFound.includes('href="/"') && notFound.includes('href="/#games"'), 'The 404 page needs Home and Browse Games links.');

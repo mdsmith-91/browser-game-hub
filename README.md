@@ -53,7 +53,7 @@ Battleship hot-seat play has two private setup turns. After every setup and comb
 ## Project structure
 
 - `index.html` is the shared hub shell.
-- `js/game-registry.js` is the source of truth for game cards, routes, modes, and displayed records.
+- `js/game-registry.js` is the source of truth for game cards, category membership and order, routes, modes, and displayed records.
 - `js/storage.js` normalizes and persists local scores and statistics.
 - `js/game-ui.js` provides the shared accessible game-over dialog.
 - `js/cards.js` provides standard cards, deck creation/reset/draw, Fisher-Yates shuffle, rank/suit helpers, and the shared card renderer.
@@ -65,7 +65,7 @@ Battleship hot-seat play has two private setup turns. After every setup and comb
 
 ## Architecture and persistence
 
-The hub is rendered from `js/game-registry.js`; the registry declares each game's supported modes and sorts the library by title. Shared score and aggregate statistics use established `bgh_` LocalStorage keys through `js/storage.js`. Each game remains self-contained under `games/<id>/`. The repository directory may remain `browser-game-hub`; the public site name is Alt Tab Tavern.
+The hub is rendered from `js/game-registry.js`; the registry declares each game's category and supported modes, then sorts games alphabetically within the metadata-ordered category sections. Empty categories are omitted. Shared score and aggregate statistics use established `bgh_` LocalStorage keys through `js/storage.js`. Each game remains self-contained under `games/<id>/`. The repository directory may remain `browser-game-hub`; the public site name is Alt Tab Tavern.
 
 ## Design system
 
