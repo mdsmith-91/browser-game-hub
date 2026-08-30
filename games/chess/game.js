@@ -302,7 +302,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = ChessEngin
 if (typeof document !== 'undefined') {
   const ChessGame = (() => {
     const symbols = {
-      wk: '♔', wq: '♕', wr: '♖', wb: '♗', wn: '♘', wp: '♙',
+      wk: '♚', wq: '♛', wr: '♜', wb: '♝', wn: '♞', wp: '♟',
       bk: '♚', bq: '♛', br: '♜', bb: '♝', bn: '♞', bp: '♟'
     };
     const pieceNames = { k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' };
@@ -445,7 +445,7 @@ if (typeof document !== 'undefined') {
       for (const type of ['q', 'r', 'b', 'n']) {
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = 'promotion-choice';
+        button.className = `promotion-choice ${engine.turn === 'w' ? 'white-piece' : 'black-piece'}`;
         button.dataset.piece = type;
         button.setAttribute('aria-label', `Promote to ${pieceNames[type]}`);
         button.textContent = symbols[`${engine.turn}${type}`];

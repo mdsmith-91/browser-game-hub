@@ -1,5 +1,10 @@
 const assert = require('assert');
+const fs = require('fs');
 const ChessEngine = require('../games/chess/game.js');
+const chessSource = fs.readFileSync('games/chess/game.js', 'utf8');
+
+assert(/wb: '♝'/.test(chessSource) && /bb: '♝'/.test(chessSource), 'Both bishops should use the same silhouette and rely on CSS for color.');
+assert(/promotion-choice.*white-piece.*black-piece/.test(chessSource), 'Promotion glyphs should receive the moving side color.');
 
 const position = ChessEngine.squareToPosition;
 const play = (game, from, to, promotion) => game.move(position(from), position(to), promotion);
