@@ -63,6 +63,16 @@ const GameRegistry = [
     stats: ['Games Played', 'Wins', 'Losses', 'Draws', 'High Score', 'Time Played']
   },
   {
+    id: 'solitaire',
+    title: 'Solitaire',
+    description: 'Settle in with classic Draw 1 Klondike, complete with undo.',
+    url: '/games/solitaire/',
+    category: 'Cards',
+    record: { label: 'Best Time', type: 'low-time' },
+    gameModes: ['Single Player'],
+    stats: ['Games Played', 'Games Won', 'Win Rate', 'Best Time', 'Fewest Moves', 'Time Played']
+  },
+  {
     id: 'tic-tac-toe',
     title: 'Tic-Tac-Toe',
     description: 'Make three in a row against a friend or an unbeatable AI.',

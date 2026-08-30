@@ -1,0 +1,53 @@
+.playing-card {
+  aspect-ratio: 5 / 7;
+  background: var(--text);
+  border: 1px solid var(--bg-deep);
+  border-radius: clamp(5px, .7vw, 9px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .28);
+  color: var(--bg-deep);
+  cursor: pointer;
+  display: block;
+  flex: 0 0 auto;
+  font: inherit;
+  height: var(--card-height, 7rem);
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  touch-action: manipulation;
+  user-select: none;
+  width: var(--card-width, 5rem);
+}
+
+.playing-card:hover:not(:disabled) { transform: translateY(-1px); }
+.playing-card:focus-visible { outline: 3px solid var(--accent-hover); outline-offset: 2px; z-index: 20; }
+.playing-card.selected { box-shadow: 0 0 0 3px var(--accent), 0 7px 16px rgba(0, 0, 0, .42); transform: translateY(-3px); z-index: 15; }
+.playing-card:disabled { cursor: default; opacity: .68; }
+.playing-card.card-red { color: var(--danger); }
+.playing-card.card-black { color: var(--bg-deep); }
+
+.card-corner {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(.55rem, calc(var(--card-width, 5rem) * .19), 1rem);
+  font-weight: 900;
+  left: 10%;
+  line-height: .88;
+  position: absolute;
+  top: 8%;
+}
+
+.card-corner span { font-size: .8em; margin-top: .15em; }
+.card-corner-bottom { bottom: 8%; left: auto; right: 10%; top: auto; transform: rotate(180deg); }
+.card-suit { font-size: clamp(1rem, calc(var(--card-width, 5rem) * .42), 2.35rem); left: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); }
+
+.playing-card.card-back {
+  background-color: var(--surface-elevated);
+  background-image: linear-gradient(45deg, rgba(227, 163, 75, .2) 25%, transparent 25%), linear-gradient(-45deg, rgba(227, 163, 75, .2) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(220, 115, 85, .18) 75%), linear-gradient(-45deg, transparent 75%, rgba(220, 115, 85, .18) 75%);
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+  background-size: 12px 12px;
+  border: 2px solid #d9c7ac;
+  color: var(--accent);
+}
+
+.card-back::after { border: 1px solid rgba(227, 163, 75, .5); border-radius: max(3px, calc(var(--card-width, 5rem) * .06)); content: ''; inset: 7%; position: absolute; }

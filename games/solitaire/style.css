@@ -1,0 +1,87 @@
+.solitaire-page { max-width: 1280px; }
+
+.solitaire-board {
+  --card-width: clamp(2.4rem, calc((100vw - 4rem) / 7), 5.8rem);
+  --card-height: calc(var(--card-width) * 1.4);
+  background: radial-gradient(circle at 50% 0, rgba(127, 186, 133, .08), transparent 55%), rgba(15, 14, 12, .4);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  margin: 0 auto;
+  min-height: calc(var(--card-height) * 5.7);
+  overflow: hidden;
+  padding: clamp(.45rem, 2vw, 1.25rem);
+  position: relative;
+  user-select: none;
+}
+
+.solitaire-top,
+.tableau {
+  display: grid;
+  gap: clamp(3px, .8vw, .75rem);
+  grid-template-columns: repeat(7, var(--card-width));
+  justify-content: space-between;
+}
+
+.solitaire-top { margin-bottom: clamp(.8rem, 2.3vw, 1.5rem); }
+.foundation-gap { grid-column: span 1; }
+.card-pile { height: var(--card-height); position: relative; width: var(--card-width); }
+.card-pile .playing-card { left: 0; position: absolute; top: 0; }
+
+.empty-pile {
+  align-items: center;
+  aspect-ratio: 5 / 7;
+  background: rgba(247, 241, 232, .025);
+  border: 2px dashed rgba(247, 241, 232, .18);
+  border-radius: clamp(5px, .7vw, 9px);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  font-size: clamp(.65rem, calc(var(--card-width) * .28), 1.45rem);
+  font-weight: 850;
+  height: var(--card-height);
+  justify-content: center;
+  padding: 0;
+  touch-action: manipulation;
+  width: var(--card-width);
+}
+
+.empty-pile:hover { background: rgba(227, 163, 75, .08); border-color: var(--border-strong); color: var(--accent); }
+.empty-pile:focus-visible { outline: 3px solid var(--accent-hover); outline-offset: 2px; }
+.stock-empty { font-size: clamp(.55rem, calc(var(--card-width) * .17), .83rem); line-height: 1.15; text-align: center; }
+.foundation-empty[data-color="red"] { color: #dc7355; }
+
+.tableau { align-items: start; }
+.tableau-pile { min-height: calc(var(--card-height) * 4); position: relative; width: var(--card-width); }
+.tableau-pile > .playing-card { position: relative; }
+.tableau-pile > .playing-card + .playing-card { margin-top: calc(var(--card-height) * -.73); }
+.tableau-pile > .playing-card.card-face + .playing-card { margin-top: calc(var(--card-height) * -.62); }
+.tableau-pile > .empty-pile { position: absolute; }
+.playing-card.card-back:disabled { opacity: 1; }
+
+.solitaire-status { min-height: 1.4em; }
+.solitaire-board.invalid-move { animation: invalid-move 180ms ease-in-out 2; }
+.solitaire-board.drag-active .empty-pile,
+.solitaire-board.drag-active .card-pile,
+.solitaire-board.drag-active .tableau-pile { border-color: var(--border-strong); }
+.playing-card.dragging { opacity: .72; transform: translateY(-4px) scale(1.02); z-index: 30; }
+
+@media (pointer: fine) {
+  .playing-card.card-face { touch-action: none; }
+}
+
+@keyframes invalid-move {
+  50% { box-shadow: inset 0 0 0 2px rgba(221, 107, 97, .6); }
+}
+
+@media (max-width: 700px) {
+  .solitaire-board { min-height: calc(var(--card-height) * 6.45); }
+  .tableau-pile > .playing-card + .playing-card { margin-top: calc(var(--card-height) * -.78); }
+  .tableau-pile > .playing-card.card-face + .playing-card { margin-top: calc(var(--card-height) * -.66); }
+}
+
+@media (max-width: 480px) {
+  .solitaire-board { margin-inline: -.2rem; padding-inline: .35rem; }
+  .solitaire-top, .tableau { gap: 3px; }
+  .game-info-bar .stat-box { flex-basis: 22%; }
+  .game-info-bar .stat-box .value { font-size: 1rem; }
+}

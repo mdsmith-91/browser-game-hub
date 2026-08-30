@@ -16,6 +16,7 @@ const expectedModes = {
   minesweeper: ['Single Player'],
   pong: ['Two Players', 'Versus Computer'],
   snake: ['Single Player', 'Two Players'],
+  solitaire: ['Single Player'],
   'tic-tac-toe': ['Two Players', 'Versus Computer']
 };
 const modePageLabels = { 'Single Player': 'Single Player', 'Two Players': 'Two Players', 'Versus Computer': 'Versus AI' };

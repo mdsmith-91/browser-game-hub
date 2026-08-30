@@ -25,6 +25,7 @@ node tests/storage.test.js
 node tests/static.test.js
 node tests/game-modes.test.js
 node tests/chess.test.js
+node tests/cards.test.js
 ```
 
 Then serve the site and manually check the homepage, every registry route, each mode and restart flow, keyboard/touch input, saved records after reload, and the 320 px through desktop responsive layouts.
@@ -34,6 +35,8 @@ Then serve the site and manually check the homepage, every registry route, each 
 Chess, Tic-Tac-Toe, Checkers, and Connect Four support both a local two-player game and a responsive casual AI opponent. Pong supports Versus AI and Two Players (Player 1: W/S; Player 2: arrow keys). Battleship supports Versus AI and a private two-player hot-seat mode. Snake offers Single Player and genuine simultaneous Two Players; Minesweeper is Single Player only.
 
 Snake two-player mode is simultaneous and keyboard-first: Player 1 uses W/A/S/D and Player 2 uses arrow keys. A wall, body, or head-to-head collision loses the round; simultaneous crashes are a draw.
+
+Solitaire is Draw 1 Klondike with unlimited stock recycling, click/tap and desktop drag controls, double-click-to-foundation, bounded undo history, and best-time/fewest-moves records. A meaningfully started deal is recorded when won or abandoned through New Game/navigation; untouched redeals are not counted.
 
 Minesweeper offers beginner, intermediate, and expert solo boards with first-click safety, touch flag mode, best-time tracking, and standard win/loss completion.
 
@@ -47,7 +50,9 @@ Battleship hot-seat play has two private setup turns. After every setup and comb
 - `js/game-registry.js` is the source of truth for game cards, routes, modes, and displayed records.
 - `js/storage.js` normalizes and persists local scores and statistics.
 - `js/game-ui.js` provides the shared accessible game-over dialog.
+- `js/cards.js` provides standard cards, deck creation/reset/draw, Fisher-Yates shuffle, rank/suit helpers, and the shared card renderer.
 - `css/main.css` contains brand tokens and hub styles; `css/games.css` contains shared game controls and panels.
+- `css/cards.css` contains the reusable responsive playing-card presentation.
 - `games/<id>/` contains each game's HTML, CSS, and JavaScript.
 - `404.html`, `robots.txt`, and `sitemap.xml` support static hosting and discovery.
 - `tests/` contains dependency-free Node checks.

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play polished Draw 1 Klondike Solitaire with undo, touch controls, and local statistics." />
+  <link rel="canonical" href="https://alttabtavern.com/games/solitaire/" />
+  <meta property="og:title" content="Solitaire | Alt Tab Tavern" />
+  <meta property="og:description" content="Play polished Draw 1 Klondike Solitaire with undo, touch controls, and local statistics." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/solitaire/" />
+  <meta name="theme-color" content="#171512" />
+  <title>Solitaire | Alt Tab Tavern</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/games.css" />
+  <link rel="stylesheet" href="/css/cards.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="game-container solitaire-page">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
+    <h1 class="game-title">Solitaire</h1>
+    <div class="game-header">
+      <div class="game-controls">
+        <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
+        <button type="button" class="btn-secondary game-btn" id="undo-button" disabled>Undo</button>
+        <div class="control-group"><span>Mode</span><strong>Single Player</strong></div>
+        <div class="control-group"><span>Rules</span><strong>Draw 1 · Unlimited recycle</strong></div>
+      </div>
+      <div class="game-info-bar">
+        <div class="stat-box"><span class="label">Time</span><span class="value" id="timer">0:00</span></div>
+        <div class="stat-box"><span class="label">Moves</span><span class="value" id="move-count">0</span></div>
+        <div class="stat-box"><span class="label">Games Played</span><span class="value" id="games-played">0</span></div>
+        <div class="stat-box"><span class="label">Games Won</span><span class="value" id="games-won">0</span></div>
+        <div class="stat-box"><span class="label">Win Rate</span><span class="value" id="win-rate">0%</span></div>
+        <div class="stat-box"><span class="label">Best Time</span><span class="value" id="best-time">--:--</span></div>
+        <div class="stat-box"><span class="label">Fewest Moves</span><span class="value" id="fewest-moves">—</span></div>
+        <div class="stat-box"><span class="label">Time Played</span><span class="value" id="time-played">0m 0s</span></div>
+      </div>
+    </div>
+
+    <section class="solitaire-board" id="solitaire-board" aria-label="Klondike Solitaire table">
+      <div class="solitaire-top">
+        <div class="card-pile" id="stock-pile" aria-label="Stock"></div>
+        <div class="card-pile" id="waste-pile" aria-label="Waste"></div>
+        <div class="foundation-gap" aria-hidden="true"></div>
+        <div class="card-pile foundation-pile" data-suit="clubs" aria-label="Clubs foundation"></div>
+        <div class="card-pile foundation-pile" data-suit="diamonds" aria-label="Diamonds foundation"></div>
+        <div class="card-pile foundation-pile" data-suit="hearts" aria-label="Hearts foundation"></div>
+        <div class="card-pile foundation-pile" data-suit="spades" aria-label="Spades foundation"></div>
+      </div>
+      <div class="tableau" id="tableau" aria-label="Tableau"></div>
+    </section>
+    <p id="solitaire-status" class="board-labels solitaire-status" aria-live="polite">Choose the stock or a face-up card to begin.</p>
+    <p class="board-labels board-help-copy">Tap a card, then its destination. On desktop, you can also drag cards or double-click a card to send it to its foundation.</p>
+  </main>
+  <script src="/js/storage.js"></script>
+  <script src="/js/game-ui.js"></script>
+  <script src="/js/cards.js"></script>
+  <script src="/games/solitaire/solitaire-rules.js"></script>
+  <script src="/games/solitaire/game.js"></script>
+</body>
+</html>
