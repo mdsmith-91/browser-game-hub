@@ -1,0 +1,1 @@
+#player-hand .playing-card{transition:transform .15s}#player-hand .playing-card:not(:disabled):hover{transform:translateY(-10px)}#stock .playing-card,#discard .playing-card{position:absolute}.pile-stack{width:5.5rem}.meld-card{box-shadow:0 0 0 3px var(--success)}

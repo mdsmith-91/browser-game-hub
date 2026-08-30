@@ -1,0 +1,9 @@
+const MancalaRules = (() => {
+  const stores = [6, 13]; const pitsFor = player => player === 0 ? [0,1,2,3,4,5] : [7,8,9,10,11,12];
+  function createState() { return { pits: [4,4,4,4,4,4,0,4,4,4,4,4,4,0], currentPlayer: 0, over: false, winner: null }; }
+  function legalMoves(state, player = state.currentPlayer) { return pitsFor(player).filter(index => state.pits[index] > 0); }
+  function applyMove(state, action) { if (state.over || action.player !== state.currentPlayer || !legalMoves(state).includes(action.pit)) return false; let stones = state.pits[action.pit]; state.pits[action.pit] = 0; let index = action.pit; while (stones) { index = (index + 1) % 14; if (index === stores[1 - action.player]) continue; state.pits[index]++; stones--; } const own = pitsFor(action.player); if (own.includes(index) && state.pits[index] === 1) { const opposite = 12 - index; if (state.pits[opposite]) { state.pits[stores[action.player]] += state.pits[opposite] + 1; state.pits[opposite] = state.pits[index] = 0; } } const bonus = index === stores[action.player]; if (!bonus) state.currentPlayer = 1 - action.player; finishIfNeeded(state); return { bonus, lastPit: index }; }
+  function finishIfNeeded(state) { if (pitsFor(0).every(i => !state.pits[i]) || pitsFor(1).every(i => !state.pits[i])) { for (const player of [0,1]) for (const index of pitsFor(player)) { state.pits[stores[player]] += state.pits[index]; state.pits[index] = 0; } state.over = true; state.winner = state.pits[6] === state.pits[13] ? null : state.pits[6] > state.pits[13] ? 0 : 1; } }
+  function chooseAiMove(state) { return legalMoves(state).map(pit => { const copy=JSON.parse(JSON.stringify(state)); const before=copy.pits[13]; const result=applyMove(copy,{type:'sow',player:1,pit}); return {pit,score:(copy.pits[13]-before)*5+(result.bonus?8:0)-copy.pits[6]}; }).sort((a,b)=>b.score-a.score)[0]?.pit; }
+  return { createState, pitsFor, legalMoves, applyMove, finishIfNeeded, chooseAiMove };
+})();

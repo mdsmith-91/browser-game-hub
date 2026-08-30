@@ -1,0 +1,1 @@
+#dartboard{aspect-ratio:1;background:#211d18;width:min(82vw,500px)}#scoreboard{display:flex;gap:1rem;justify-content:center;margin:0 auto .75rem;max-width:500px}.score-player.active{color:var(--accent)}

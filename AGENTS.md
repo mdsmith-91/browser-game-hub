@@ -8,8 +8,7 @@ game navigation, `game-registry.js` lists games, `storage.js` handles local
 scores and statistics, and `game-ui.js` provides the shared game-over dialog. Shared styles live in `css/`.
 
 Each game is self-contained under `games/<game-id>/` with `index.html`,
-`style.css`, and `game.js`; current IDs include `snake`, `minesweeper`,
-`chess`, `connect-four`, `checkers`, `tic-tac-toe`, `pong`, and `battleship`. Keep game-specific
+`style.css`, and `game.js`; optional `*-rules.js` and `*-ai.js` modules expose pure logic for tests. Keep game-specific
 DOM, styling, and logic inside that directory.
 
 Game metadata in `js/game-registry.js` declares supported modes and category membership. Category labels, descriptions, and order live in `GameCategories`; do not duplicate category membership or game lists in homepage markup or code. The homepage hides categories without implemented games and alphabetizes games within every category. Use the
@@ -17,6 +16,14 @@ consistent labels `Single Player`, `Two Players`, and `Versus Computer` and
 reset all round state when the selector changes. Multiplayer status must name
 the current player in text, use an `aria-live` status region for turn/end
 updates, and keep private state hidden during hot-seat handoffs.
+
+The category order is Board Games, Card Games, Arcade, Puzzle, then Tavern Games. Registry metadata is the homepage source of truth, and titles are alphabetized within each category. Capability tags must describe real support only: `Single Player`, `Versus Computer`, and `Two Players` map to 1 PLAYER, AI, and LOCAL 2P; never advertise ONLINE. Homepage records must use the registry's `record` descriptor and choose a meaningful metric rather than forcing high score onto every game.
+
+Card games must use `js/cards.js` for standard cards, decks, shuffling, and card DOM. Add shared card utilities only when more than one game benefits. Rules/state should remain separate from rendering where practical, state should be serializable, randomness should be injected or centralized, and AI must submit ordinary validated actions. Keep player identity distinct from controller type so turn-based games can later accept the same actions from remote players without adding networking now.
+
+Physics games should use discrete input actions, a bounded/fixed simulation step, finite-value guards, collision separation, sleep thresholds, and explicit animation-frame/listener cleanup. Stop timers and simulations on game end, restart, page hide, and navigation. Pointer gestures may suppress browser behavior only on the active play surface.
+
+`Games Played` means a completed round or match, and `Time Played` means active play only. Use `Storage.createPlayTimer`, avoid duplicate timers, and stop it when play ends or the page is hidden.
 
 ## Build, Test, and Development Commands
 
