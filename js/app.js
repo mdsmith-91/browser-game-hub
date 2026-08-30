@@ -8,9 +8,9 @@ function renderHub() {
   GameRegistry.forEach(game => {
     const card = document.createElement('article');
     const record = game.record ? getRecord(game) : null;
-    const modeBadges = game.gameModes.map(mode => {
-      const label = mode === 'Single Player' ? '1 Player' : mode === 'Two Players' ? '2 Players' : 'AI';
-      return `<span class="mode-badge${mode === 'Versus Computer' ? ' ai' : ''}">${label}</span>`;
+    const tags = game.tags || game.gameModes.map(mode => mode === 'Single Player' ? '1 Player' : mode === 'Two Players' ? '2 Players' : 'AI');
+    const modeBadges = tags.map(label => {
+      return `<span class="mode-badge${label === 'AI' ? ' ai' : ''}">${label}</span>`;
     }).join('');
     card.className = `game-card game-${game.id}`;
     card.innerHTML = `

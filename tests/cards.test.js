@@ -28,6 +28,8 @@ for (const suit of PlayingCards.suits) assert.strictEqual(standardDeck.filter(it
 for (const rank of PlayingCards.ranks) assert.strictEqual(standardDeck.filter(item => item.rank === rank).length, 4, `${rank} must appear once per suit.`);
 assert.strictEqual(card('hearts', 'ace').color, 'red');
 assert.strictEqual(card('spades', 'king').color, 'black');
+assert.deepStrictEqual(JSON.parse(JSON.stringify(PlayingCards.countByRank([card('hearts', 'ace'), card('spades', 'ace'), card('clubs', 'king')]))), { ace: 2, king: 1 });
+assert.strictEqual(PlayingCards.groupByRank([card('hearts', '8'), card('clubs', '8')])['8'].length, 2);
 
 const originalIds = standardDeck.map(item => item.id);
 const shuffled = PlayingCards.shuffle(standardDeck.map(item => item.clone()), () => 0.25);

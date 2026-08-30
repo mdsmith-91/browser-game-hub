@@ -36,6 +36,12 @@ Chess, Tic-Tac-Toe, Checkers, and Connect Four support both a local two-player g
 
 Snake two-player mode is simultaneous and keyboard-first: Player 1 uses W/A/S/D and Player 2 uses arrow keys. A wall, body, or head-to-head collision loses the round; simultaneous crashes are a draw.
 
+Blackjack is a casual single-player game against a fixed-rules dealer that draws to 16 and stands on 17. It handles soft Aces, naturals, busts, and pushes without presenting the dealer as an AI opponent.
+
+Crazy Eights is single-player versus AI. It supports wild-Eight suit selection, draw/discard recycling, legal-action-driven AI choices, win streaks, and private opponent hands.
+
+Go Fish is single-player versus AI with explicit legal rank requests, complete-rank transfers, book removal, deck and empty-hand handling, and a lightweight AI memory for ranks the player has revealed.
+
 Solitaire is Draw 1 Klondike with unlimited stock recycling, click/tap and desktop drag controls, double-click-to-foundation, bounded undo history, and best-time/fewest-moves records. A meaningfully started deal is recorded when won or abandoned through New Game/navigation; untouched redeals are not counted.
 
 Minesweeper offers beginner, intermediate, and expert solo boards with first-click safety, touch flag mode, best-time tracking, and standard win/loss completion.
@@ -52,7 +58,7 @@ Battleship hot-seat play has two private setup turns. After every setup and comb
 - `js/game-ui.js` provides the shared accessible game-over dialog.
 - `js/cards.js` provides standard cards, deck creation/reset/draw, Fisher-Yates shuffle, rank/suit helpers, and the shared card renderer.
 - `css/main.css` contains brand tokens and hub styles; `css/games.css` contains shared game controls and panels.
-- `css/cards.css` contains the reusable responsive playing-card presentation.
+- `css/cards.css` contains the reusable responsive playing-card presentation; `css/card-games.css` contains shared hand, pile, and turn layouts.
 - `games/<id>/` contains each game's HTML, CSS, and JavaScript.
 - `404.html`, `robots.txt`, and `sitemap.xml` support static hosting and discovery.
 - `tests/` contains dependency-free Node checks.
@@ -66,6 +72,8 @@ The hub is rendered from `js/game-registry.js`; the registry declares each game'
 Statistics are normalized on every read into `gamesPlayed`, `wins`, `losses`, `draws`, and cumulative active `timePlayed`. Completed competitive results are recorded from Player 1's perspective in both AI and local modes. A one-time migration folds compatible legacy local counters into the unified totals, while obsolete Battleship/Pong record keys and the retired Minesweeper duel counters are discarded. Registry metadata declares every supported mode, tracked metric, and homepage record.
 
 Alt Tab Tavern uses a dependency-free, CSS-first visual system. Shared palette tokens and homepage components live in `css/main.css`; shared game-page controls and panels live in `css/games.css`. Keep public branding as **Alt Tab Tavern**, use the warm `--accent` palette for primary actions, and reuse the shared button, status, and control-group classes on game pages.
+
+The card rules are kept in pure game-specific modules, while AI controllers select from their rules module's legal actions. Serializable state holds explicit player/controller identity and hidden hands without coupling core play to LocalStorage.
 
 Manual browser checks complement the dependency-free tests: launch every card, switch every mode, verify restart/back navigation, test keyboard/touch behavior where available, and confirm saved scores after reload.
 

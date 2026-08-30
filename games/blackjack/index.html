@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play casual single-player Blackjack against the dealer with correct Ace handling and local statistics." />
+  <link rel="canonical" href="https://alttabtavern.com/games/blackjack/" />
+  <meta property="og:title" content="Blackjack | Alt Tab Tavern" />
+  <meta property="og:description" content="Play casual single-player Blackjack against the dealer with correct Ace handling and local statistics." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alttabtavern.com/games/blackjack/" />
+  <meta name="theme-color" content="#171512" />
+  <title>Blackjack | Alt Tab Tavern</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/games.css" />
+  <link rel="stylesheet" href="/css/cards.css" />
+  <link rel="stylesheet" href="/css/card-games.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="game-container">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a>
+    <h1 class="game-title">Blackjack</h1>
+    <div class="game-header">
+      <div class="game-controls">
+        <button type="button" class="btn-secondary game-btn restart-btn">New Game</button>
+        <div class="control-group"><span>Mode</span><strong>Single Player</strong></div>
+        <div class="control-group"><span>Dealer</span><strong>Draws to 16 · Stands on 17</strong></div>
+      </div>
+      <div class="game-info-bar">
+        <div class="stat-box"><span class="label">Games Played</span><span class="value" id="games-played">0</span></div>
+        <div class="stat-box"><span class="label">Wins</span><span class="value" id="wins">0</span></div>
+        <div class="stat-box"><span class="label">Losses</span><span class="value" id="losses">0</span></div>
+        <div class="stat-box"><span class="label">Pushes</span><span class="value" id="pushes">0</span></div>
+        <div class="stat-box"><span class="label">Blackjacks</span><span class="value" id="blackjacks">0</span></div>
+        <div class="stat-box"><span class="label">Win Rate</span><span class="value" id="win-rate">0%</span></div>
+        <div class="stat-box"><span class="label">Time Played</span><span class="value" id="time-played">0m</span></div>
+      </div>
+    </div>
+    <section class="card-table" aria-label="Blackjack table">
+      <div class="card-zone"><h2>Dealer · <span id="dealer-value">?</span></h2><div class="card-row" id="dealer-hand"></div></div>
+      <p class="table-status" id="game-status" aria-live="polite"></p>
+      <div class="card-zone"><h2>Your hand · <span id="player-value">0</span></h2><div class="card-row" id="player-hand"></div></div>
+      <div class="action-row">
+        <button type="button" class="btn-primary game-btn" id="hit-button">Hit</button>
+        <button type="button" class="btn-secondary game-btn" id="stand-button">Stand</button>
+      </div>
+    </section>
+    <p class="board-labels">Reach 21 without going over. Face cards count as 10; Aces count as 1 or 11.</p>
+  </main>
+  <script src="/js/storage.js"></script><script src="/js/game-ui.js"></script><script src="/js/cards.js"></script>
+  <script src="/games/blackjack/blackjack-rules.js"></script><script src="/games/blackjack/game.js"></script>
+</body>
+</html>

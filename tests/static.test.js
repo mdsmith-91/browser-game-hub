@@ -10,9 +10,12 @@ const games = registrySandbox.registry;
 const allowedModes = new Set(['Single Player', 'Two Players', 'Versus Computer']);
 const expectedModes = {
   battleship: ['Two Players', 'Versus Computer'],
+  blackjack: ['Single Player'],
   checkers: ['Two Players', 'Versus Computer'],
   chess: ['Two Players', 'Versus Computer'],
   'connect-four': ['Two Players', 'Versus Computer'],
+  'crazy-eights': ['Versus Computer'],
+  'go-fish': ['Versus Computer'],
   minesweeper: ['Single Player'],
   pong: ['Two Players', 'Versus Computer'],
   snake: ['Single Player', 'Two Players'],
@@ -55,6 +58,10 @@ for (const game of games) {
     assert(html.includes(`>${stat}<`), `${game.id} does not show its tracked ${stat} statistic.`);
   }
 }
+
+assert.deepStrictEqual(Array.from(games.find(game => game.id === 'blackjack').tags), ['1 Player'], 'Blackjack should not carry an AI tag for its fixed dealer.');
+assert.deepStrictEqual(Array.from(games.find(game => game.id === 'crazy-eights').tags), ['1 Player', 'AI']);
+assert.deepStrictEqual(Array.from(games.find(game => game.id === 'go-fish').tags), ['1 Player', 'AI']);
 
 const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
 for (const game of games) assert(sitemap.includes(`https://alttabtavern.com${game.url}`), `${game.id} is missing from the sitemap.`);

@@ -1,0 +1,43 @@
+.card-table {
+  background: linear-gradient(145deg, rgba(48, 42, 35, .92), rgba(36, 32, 27, .94));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  margin: 0 auto;
+  max-width: 960px;
+  min-height: 28rem;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.card-zone { min-width: 0; text-align: center; }
+.card-zone h2 { color: var(--text-muted); font-size: .78rem; letter-spacing: .12em; margin-bottom: .65rem; text-transform: uppercase; }
+.card-row { align-items: center; display: flex; justify-content: center; min-height: 8rem; padding: .25rem; }
+.card-row .playing-card + .playing-card { margin-left: clamp(-2.9rem, -5vw, -1.5rem); }
+.card-row .playing-card { --card-height: clamp(6.5rem, 14vw, 9rem); --card-width: clamp(4.65rem, 10vw, 6.4rem); }
+.card-row .playing-card:hover:not(:disabled), .card-row .playing-card:focus-visible, .card-row .playing-card.selected { z-index: 30; }
+.card-count { color: var(--accent); font-weight: 900; }
+.table-center { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 1rem auto; }
+.pile-stack { min-height: 8rem; min-width: 5rem; position: relative; }
+.pile-stack .playing-card { --card-height: 7.5rem; --card-width: 5.35rem; }
+.pile-stack .playing-card + .playing-card { left: .18rem; position: absolute; top: .18rem; }
+.table-status { color: var(--text); font-weight: 750; margin: .75rem auto; min-height: 1.6rem; text-align: center; }
+.turn-chip { background: rgba(227, 163, 75, .12); border: 1px solid var(--border-strong); border-radius: 999px; color: var(--accent); font-size: .78rem; font-weight: 900; padding: .35rem .7rem; }
+.action-row { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-top: 1rem; }
+.suit-picker { background: var(--surface-elevated); border: 1px solid var(--border-strong); border-radius: 12px; margin: 1rem auto; max-width: 30rem; padding: .85rem; text-align: center; }
+.suit-picker p { color: var(--text-muted); font-size: .82rem; font-weight: 800; margin-bottom: .55rem; }
+.suit-picker[hidden] { display: none; }
+.suit-button { min-width: 3.2rem; }
+.suit-button[data-color="red"] { color: var(--danger); }
+.book-row { color: var(--text-muted); font-size: .82rem; margin-top: .35rem; min-height: 1.3rem; }
+.rank-actions { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; margin: .8rem auto 0; max-width: 44rem; }
+.rank-button { min-height: 44px; min-width: 44px; padding-inline: .65rem; }
+.score-callout { color: var(--accent); font-size: clamp(1.15rem, 3vw, 1.65rem); font-weight: 950; }
+
+@media (max-width: 600px) {
+  .card-table { border-radius: 14px; min-height: 24rem; padding-inline: .6rem; }
+  .card-row { justify-content: flex-start; overflow-x: auto; padding: .5rem; scroll-padding-inline: .5rem; }
+  .card-row .playing-card { flex-basis: 4.65rem; }
+  .card-row .playing-card + .playing-card { margin-left: -2rem; }
+  .card-row .playing-card:last-child { margin-right: .5rem; }
+  .table-center { gap: .65rem; margin-block: .5rem; }
+}

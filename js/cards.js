@@ -45,6 +45,25 @@ const PlayingCards = (() => {
     return cards;
   }
 
+  function countByRank(cards) {
+    return cards.reduce((counts, card) => {
+      counts[card.rank] = (counts[card.rank] || 0) + 1;
+      return counts;
+    }, {});
+  }
+
+  function groupByRank(cards) {
+    return cards.reduce((groups, card) => {
+      (groups[card.rank] ||= []).push(card);
+      return groups;
+    }, {});
+  }
+
+  function drawCards(source, count = 1) {
+    const amount = Math.min(source.length, Math.max(0, Math.floor(count)));
+    return source.splice(Math.max(0, source.length - amount), amount);
+  }
+
   class Deck {
     constructor(cards = createStandardDeck()) {
       this.originalCards = cards.map(card => card.clone());
@@ -61,8 +80,7 @@ const PlayingCards = (() => {
     }
 
     draw(count = 1) {
-      const amount = Math.max(0, Math.floor(count));
-      return this.cards.splice(Math.max(0, this.cards.length - amount), amount);
+      return drawCards(this.cards, count);
     }
 
     deal(count = 1) {
@@ -104,6 +122,9 @@ const PlayingCards = (() => {
     cardLabel,
     createStandardDeck,
     shuffle,
+    countByRank,
+    groupByRank,
+    drawCards,
     createCardElement
   };
 })();

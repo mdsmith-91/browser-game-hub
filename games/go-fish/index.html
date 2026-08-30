@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play Go Fish against a lightweight computer opponent that remembers useful rank information." />
+  <link rel="canonical" href="https://alttabtavern.com/games/go-fish/" /><meta property="og:title" content="Go Fish | Alt Tab Tavern" />
+  <meta property="og:description" content="Play Go Fish against a lightweight computer opponent that remembers useful rank information." /><meta property="og:type" content="website" /><meta property="og:url" content="https://alttabtavern.com/games/go-fish/" />
+  <meta name="theme-color" content="#171512" /><title>Go Fish | Alt Tab Tavern</title><link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="/css/games.css" /><link rel="stylesheet" href="/css/cards.css" /><link rel="stylesheet" href="/css/card-games.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="game-container">
+    <a href="/" id="backToHub" class="back-btn">Back to Tavern</a><h1 class="game-title">Go Fish</h1>
+    <div class="game-header">
+      <div class="game-controls"><button type="button" class="btn-secondary game-btn restart-btn">New Game</button><div class="control-group"><span>Mode</span><strong>Versus AI</strong></div><div class="control-group"><span>Turn</span><strong class="turn-value" id="turn-indicator">Player</strong></div></div>
+      <div class="game-info-bar">
+        <div class="stat-box"><span class="label">Games Played</span><span class="value" id="games-played">0</span></div><div class="stat-box"><span class="label">Wins</span><span class="value" id="wins">0</span></div><div class="stat-box"><span class="label">Losses</span><span class="value" id="losses">0</span></div><div class="stat-box"><span class="label">Draws</span><span class="value" id="draws">0</span></div><div class="stat-box"><span class="label">Books Won</span><span class="value" id="books-won">0</span></div><div class="stat-box"><span class="label">Best Books</span><span class="value" id="best-books">0</span></div><div class="stat-box"><span class="label">Win Rate</span><span class="value" id="win-rate">0%</span></div><div class="stat-box"><span class="label">Time Played</span><span class="value" id="time-played">0m</span></div>
+      </div>
+    </div>
+    <section class="card-table" aria-label="Go Fish table">
+      <div class="card-zone"><h2>Computer · <span class="card-count" id="computer-count">7 cards</span></h2><div class="card-row" id="computer-hand"></div><p class="book-row" id="computer-books">Books: none</p></div>
+      <div class="table-center"><div class="pile-stack" id="fish-pond" aria-label="Draw pile"></div><span class="score-callout" id="book-score">0 – 0</span></div>
+      <p class="table-status" id="game-status" aria-live="polite"></p>
+      <div class="card-zone"><h2>Your hand · <span class="card-count" id="human-count">7 cards</span></h2><div class="card-row" id="human-hand"></div><p class="book-row" id="human-books">Books: none</p></div>
+      <div class="rank-actions" id="rank-actions" aria-label="Ranks you can request"></div>
+    </section>
+    <p class="board-labels">Ask for a rank already in your hand. Collect all four suits to complete a book. Most books wins.</p>
+  </main>
+  <script src="/js/storage.js"></script><script src="/js/game-ui.js"></script><script src="/js/cards.js"></script><script src="/games/go-fish/go-fish-rules.js"></script><script src="/games/go-fish/go-fish-ai.js"></script><script src="/games/go-fish/game.js"></script>
+</body>
+</html>

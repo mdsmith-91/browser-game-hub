@@ -62,6 +62,14 @@ visibilityListener();
 clock = 35000;
 timer.stop();
 assert.strictEqual(Storage.getStats('timed').timePlayed, 4, 'A stopped timer must not restart on visibility changes.');
+Storage.recordGameResult('blackjack', 'win', { blackjack: true });
+assert.strictEqual(Storage.getStats('blackjack').blackjacks, 1, 'Blackjack naturals should persist once.');
+Storage.recordGameResult('crazy-eights', 'win');
+Storage.recordGameResult('crazy-eights', 'win');
+Storage.recordGameResult('crazy-eights', 'loss');
+assert.strictEqual(Storage.getStats('crazy-eights').bestWinStreak, 2, 'Win streaks should retain their best value.');
+Storage.recordGameResult('go-fish', 'win', { booksWon: 8, books: 8 });
+assert.strictEqual(Storage.getStats('go-fish').bestBooks, 8, 'Best books should retain the single-game maximum.');
 assert.strictEqual(values.has('bgh_battleship_highscore'), false, 'Obsolete Battleship victories should be removed.');
 assert.strictEqual(values.has('bgh_pong_highscore'), false, 'Obsolete Pong score difference should be removed.');
 

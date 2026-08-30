@@ -8,6 +8,11 @@ const Storage = {
     draws: 0,
     timePlayed: 0
   },
+  gameStatsDefaults: {
+    blackjack: { blackjacks: 0 },
+    'crazy-eights': { bestWinStreak: 0, currentWinStreak: 0 },
+    'go-fish': { booksWon: 0, bestBooks: 0 }
+  },
 
   scoreKey(gameId) {
     return `${this.prefix}${gameId}_highscore`;
@@ -68,9 +73,10 @@ const Storage = {
     return Number.isFinite(number) && number >= 0 ? Math.floor(number) : 0;
   },
 
-  normalizeStats(value) {
+  normalizeStats(value, gameId) {
     const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
-    return Object.keys(this.statsDefaults).reduce((stats, key) => {
+    const defaults = { ...this.statsDefaults, ...(this.gameStatsDefaults[gameId] || {}) };
+    return Object.keys(defaults).reduce((stats, key) => {
       stats[key] = this.normalizeNumber(source[key]);
       return stats;
     }, {});
@@ -78,8 +84,8 @@ const Storage = {
 
   migrateStats(value, gameId) {
     const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
-    if (source._version === this.statsVersion) return this.normalizeStats(source);
-    const stats = this.normalizeStats(source);
+    if (source._version === this.statsVersion) return this.normalizeStats(source, gameId);
+    const stats = this.normalizeStats(source, gameId);
     if (gameId !== 'minesweeper') {
       stats.gamesPlayed += this.normalizeNumber(source.multiplayerMatches);
       stats.wins += this.normalizeNumber(source.player1Wins);
@@ -91,19 +97,19 @@ const Storage = {
   getStats(gameId) {
     try {
       const data = localStorage.getItem(this.statsKey(gameId));
-      if (!data) return this.normalizeStats({});
+      if (!data) return this.normalizeStats({}, gameId);
       const source = JSON.parse(data);
       const stats = this.migrateStats(source, gameId);
       if (source?._version !== this.statsVersion) this.saveStats(gameId, stats);
       return stats;
     } catch (error) {
       console.warn('Failed to read stats:', error);
-      return this.normalizeStats({});
+      return this.normalizeStats({}, gameId);
     }
   },
 
   saveStats(gameId, stats) {
-    const normalized = this.normalizeStats(stats);
+    const normalized = this.normalizeStats(stats, gameId);
     try {
       localStorage.setItem(this.statsKey(gameId), JSON.stringify({ ...normalized, _version: this.statsVersion }));
     } catch (error) {
@@ -119,6 +125,27 @@ const Storage = {
     if (result === 'win') stats.wins++;
     else if (result === 'loss') stats.losses++;
     else if (result === 'draw') stats.draws++;
+    return this.saveStats(gameId, stats);
+  },
+
+  recordGameResult(gameId, result, metrics = {}) {
+    if (!['win', 'loss', 'draw', 'complete'].includes(result)) return this.getStats(gameId);
+    const stats = this.getStats(gameId);
+    stats.gamesPlayed++;
+    if (result === 'win') stats.wins++;
+    else if (result === 'loss') stats.losses++;
+    else if (result === 'draw') stats.draws++;
+    const allowed = Object.keys(this.gameStatsDefaults[gameId] || {});
+    allowed.forEach(key => {
+      if (key === 'bestBooks' || key === 'bestWinStreak' || key === 'blackjacks') return;
+      stats[key] += this.normalizeNumber(metrics[key]);
+    });
+    if (gameId === 'blackjack' && metrics.blackjack) stats.blackjacks++;
+    if (gameId === 'crazy-eights') {
+      stats.currentWinStreak = result === 'win' ? stats.currentWinStreak + 1 : 0;
+      stats.bestWinStreak = Math.max(stats.bestWinStreak, stats.currentWinStreak);
+    }
+    if (gameId === 'go-fish') stats.bestBooks = Math.max(stats.bestBooks, this.normalizeNumber(metrics.books));
     return this.saveStats(gameId, stats);
   },
 
